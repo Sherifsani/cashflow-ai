@@ -38,7 +38,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+# next-env.d.ts should be committed for Next.js TypeScript support
 
 
 # ignore any copilot notes files (covers copilot-notes..txt and other variants)
