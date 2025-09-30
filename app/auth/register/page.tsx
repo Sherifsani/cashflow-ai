@@ -1,26 +1,9 @@
 "use client"
 
 import React, { useState } from 'react';
+import { FormData, Errors } from './types';
 import { useRouter } from 'next/navigation';
 import { FiTrendingUp, FiMail, FiLock, FiUser, FiPhone, FiBriefcase, FiMapPin, FiEye, FiEyeOff, FiArrowLeft, FiCheck, FiArrowRight } from "react-icons/fi";
-
-type FormData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  password: string;
-  confirmPassword: string;
-  businessName: string;
-  businessType: string;
-  businessLocation: string;
-  monthlyRevenue: string;
-  employeeCount: string;
-  alertPreference: string;
-  hearAboutUs: string;
-};
-
-type Errors = Partial<Record<keyof FormData | 'submit', string>>;
 
 const Register: React.FC = () => {
   const router = useRouter();
