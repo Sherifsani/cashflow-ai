@@ -1,15 +1,34 @@
-'use client';
+"use client"
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FiTrendingUp, FiMail, FiLock, FiUser, FiPhone, FiBriefcase, FiMapPin, FiEye, FiEyeOff, FiArrowLeft, FiCheck, FiArrowRight } from "react-icons/fi";
 
-const Register = () => {
+type FormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+  businessName: string;
+  businessType: string;
+  businessLocation: string;
+  monthlyRevenue: string;
+  employeeCount: string;
+  alertPreference: string;
+  hearAboutUs: string;
+};
+
+type Errors = Partial<Record<keyof FormData | 'submit', string>>;
+
+const Register: React.FC = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [formData, setFormData] = useState<FormData>({
     // Personal Details
     firstName: "",
     lastName: "",
@@ -27,14 +46,20 @@ const Register = () => {
     alertPreference: "whatsapp",
     hearAboutUs: ""
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Errors>({});
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const target = e.target as HTMLInputElement;
+    const name = target.name as keyof FormData;
+    const value = target.type === 'checkbox' ? String((target as HTMLInputElement).checked) : target.value;
+
     setFormData(prev => ({
       ...prev,
-      [name]: value
-    }));
+      [name]: value,
+    } as Pick<FormData, keyof FormData>));
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
@@ -44,8 +69,8 @@ const Register = () => {
     }
   };
 
-  const validateStep = (step) => {
-    const newErrors = {};
+  const validateStep = (step: number) => {
+    const newErrors: Errors = {};
     
     if (step === 1) {
       if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
@@ -80,8 +105,8 @@ const Register = () => {
       if (!formData.employeeCount) newErrors.employeeCount = "Please select employee count";
     }
     
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
   };
 
   const handleNextStep = () => {
@@ -94,7 +119,7 @@ const Register = () => {
     setCurrentStep(prev => prev - 1);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
     if (!validateStep(3)) return;
