@@ -1,26 +1,38 @@
 "use client";
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FiTrendingUp, FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiCheck, FiShield } from "react-icons/fi";
 
+interface FormData {
+  email: string;
+  password: string;
+}
+
+interface Errors {
+  email?: string;
+  password?: string;
+  submit?: string;
+}
+
 const Login = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [formData, setFormData] = useState<FormData>({
     email: "",
     password: ""
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Errors>({});
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
     // Clear error when user starts typing
-    if (errors[name]) {
+    if (errors[name as keyof Errors]) {
       setErrors(prev => ({
         ...prev,
         [name]: ""
@@ -28,8 +40,8 @@ const Login = () => {
     }
   };
 
-  const validateForm = () => {
-    const newErrors = {};
+  const validateForm = (): boolean => {
+    const newErrors: Errors = {};
     
     if (!formData.email) {
       newErrors.email = "Email is required";
@@ -47,7 +59,7 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
     if (!validateForm()) return;
@@ -70,16 +82,16 @@ const Login = () => {
         throw new Error("Invalid credentials. Please try again.");
       }
     } catch (err) {
-      setErrors({ submit: err.message });
+      setErrors({ submit: (err as Error).message });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex">
+    <div className="min-h-screen bg-[#F4F6F9] flex">
       {/* Left Side - Branding & Info */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 p-12 flex-col justify-between text-white relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#2D3540] p-12 flex-col justify-between text-white relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-full h-full" style={{backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")"}}></div>
@@ -93,7 +105,7 @@ const Login = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold">CashFlow Co-Pilot</h1>
-              <p className="text-blue-200">AI-Powered Financial Forecasting</p>
+              <p className="text-[#00A878]/80">AI-Powered Financial Forecasting</p>
             </div>
           </div>
 
@@ -105,7 +117,7 @@ const Login = () => {
               </div>
               <div>
                 <h3 className="font-semibold mb-1">Predict Cash Shortages</h3>
-                <p className="text-blue-100 text-sm">Get 2-6 weeks advance warning before running out of cash</p>
+                <p className="text-[#6B7280]/90 text-sm">Get 2-6 weeks advance warning before running out of cash</p>
               </div>
             </div>
             
@@ -115,7 +127,7 @@ const Login = () => {
               </div>
               <div>
                 <h3 className="font-semibold mb-1">Secure & Trusted</h3>
-                <p className="text-blue-100 text-sm">Bank-level security protecting 500+ Nigerian SMEs</p>
+                <p className="text-[#6B7280]/90 text-sm">Bank-level security protecting 500+ Nigerian SMEs</p>
               </div>
             </div>
             
@@ -125,7 +137,7 @@ const Login = () => {
               </div>
               <div>
                 <h3 className="font-semibold mb-1">Smart Insights</h3>
-                <p className="text-blue-100 text-sm">AI-powered recommendations to improve your cash flow</p>
+                <p className="text-[#6B7280]/90 text-sm">AI-powered recommendations to improve your cash flow</p>
               </div>
             </div>
           </div>
@@ -134,42 +146,42 @@ const Login = () => {
         {/* Bottom Stats */}
         <div className="relative z-10 grid grid-cols-3 gap-6 text-center">
           <div>
-            <div className="text-2xl font-bold text-yellow-300">500+</div>
-            <div className="text-blue-200 text-sm">SMEs Trust Us</div>
+            <div className="text-2xl font-bold text-[#00A878]">500+</div>
+            <div className="text-[#6B7280] text-sm">SMEs Trust Us</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-yellow-300">₦2.1M</div>
-            <div className="text-blue-200 text-sm">Avg. Cash Saved</div>
+            <div className="text-2xl font-bold text-[#00A878]">₦2.1M</div>
+            <div className="text-[#6B7280] text-sm">Avg. Cash Saved</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-yellow-300">94%</div>
-            <div className="text-blue-200 text-sm">Accuracy Rate</div>
+            <div className="text-2xl font-bold text-[#00A878]">94%</div>
+            <div className="text-[#6B7280] text-sm">Accuracy Rate</div>
           </div>
         </div>
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="flex-1 flex flex-col justify-center px-8 sm:px-12 lg:px-16 xl:px-20">
+      <div className="flex-1 flex flex-col justify-center px-8 sm:px-12 lg:px-16 xl:px-20 bg-[#F4F6F9]">
         <div className="max-w-md w-full mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
             <button 
               onClick={() => router.push('/')}
-              className="flex items-center text-gray-600 hover:text-gray-900 mb-6 mx-auto lg:hidden"
+              className="flex items-center text-[#6B7280] hover:text-[#1F2937] mb-6 mx-auto lg:hidden"
             >
               <FiArrowLeft className="h-4 w-4 mr-2" />
               Back to home
             </button>
             
             <div className="lg:hidden flex items-center justify-center mb-6">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg mr-3">
+              <div className="bg-[#00A878] p-2 rounded-lg mr-3">
                 <FiTrendingUp className="h-6 w-6 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">CashFlow Co-Pilot</span>
+              <span className="text-xl font-bold text-[#1F2937]">CashFlow Co-Pilot</span>
             </div>
 
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back!</h2>
-            <p className="text-gray-600">Sign in to access your cash flow dashboard</p>
+            <h2 className="text-3xl font-bold text-[#1F2937] mb-2">Welcome back!</h2>
+            <p className="text-[#6B7280]">Sign in to access your cash flow dashboard</p>
           </div>
 
           {/* Form */}
@@ -182,12 +194,12 @@ const Login = () => {
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-[#1F2937] mb-2">
                 Email Address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FiMail className="h-5 w-5 text-gray-400" />
+                  <FiMail className="h-5 w-5 text-[#6B7280]" />
                 </div>
                 <input
                   type="email"
@@ -195,8 +207,8 @@ const Login = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-white'
+                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A878] focus:border-transparent ${
+                    errors.email ? 'border-red-300 bg-red-50' : 'border-[#D1D5DB] bg-white'
                   }`}
                   placeholder="Enter your business email"
                 />
@@ -206,12 +218,12 @@ const Login = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-semibold text-[#1F2937] mb-2">
                 Password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FiLock className="h-5 w-5 text-gray-400" />
+                  <FiLock className="h-5 w-5 text-[#6B7280]" />
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -219,8 +231,8 @@ const Login = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`block w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.password ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-white'
+                  className={`block w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A878] focus:border-transparent ${
+                    errors.password ? 'border-red-300 bg-red-50' : 'border-[#D1D5DB] bg-white'
                   }`}
                   placeholder="Enter your password"
                 />
@@ -230,9 +242,9 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <FiEyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    <FiEyeOff className="h-5 w-5 text-[#6B7280] hover:text-[#1F2937]" />
                   ) : (
-                    <FiEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    <FiEye className="h-5 w-5 text-[#6B7280] hover:text-[#1F2937]" />
                   )}
                 </button>
               </div>
@@ -242,10 +254,10 @@ const Login = () => {
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
               <label className="flex items-center">
-                <input type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
-                <span className="ml-2 text-sm text-gray-700">Remember me</span>
+                <input type="checkbox" className="h-4 w-4 text-[#00A878] border-[#D1D5DB] rounded focus:ring-[#00A878]" />
+                <span className="ml-2 text-sm text-[#1F2937]">Remember me</span>
               </label>
-              <a href="/auth/forgot-password" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+              <a href="/auth/forgot-password" className="text-sm font-medium text-[#00A878] hover:text-[#008f68]">
                 Forgot password?
               </a>
             </div>
@@ -254,7 +266,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-[1.02] transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full bg-[#00A878] hover:bg-[#008f68] text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-[1.02] transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
             >
               {loading ? (
                 <div className="flex items-center justify-center">
@@ -269,17 +281,17 @@ const Login = () => {
 
           {/* Sign Up Link */}
           <div className="mt-8 text-center">
-            <p className="text-gray-600">
+            <p className="text-[#6B7280]">
               Don't have an account?{" "}
-              <a href="/auth/register" className="font-medium text-blue-600 hover:text-blue-500">
+              <a href="/auth/register" className="font-medium text-[#00A878] hover:text-[#008f68]">
                 Start your free trial
               </a>
             </p>
           </div>
 
           {/* Demo Notice */}
-          <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-            <p className="text-sm text-blue-700">
+          <div className="mt-6 bg-[#00A878]/10 border border-[#00A878]/30 rounded-lg p-4 text-center">
+            <p className="text-sm text-[#00A878]">
               <strong>Demo Mode:</strong> Use any valid email and password (6+ chars) to try the dashboard
             </p>
           </div>
