@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useState } from 'react'
-import { FiChevronDown } from 'react-icons/fi'
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
+import ScrollAnimation from './ScrollAnimation'
 
 const faqs = [
   {
@@ -10,44 +11,55 @@ const faqs = [
   },
   {
     q: 'Do I need to connect my bank account?',
-    a: 'No, you can upload statements or enter data manually. Connecting is optional.'
+    a: 'No! You can manually enter data or upload files. Bank connection is optional.'
   },
   {
     q: 'Is it really free?',
-    a: 'Yes, you can start for free. Premium features are optional.'
+    a: '14-day free trial, no credit card required. Cancel anytime.'
   },
   {
     q: 'Does it work for any business?',
-    a: 'CashFlow Co-Pilot is built for Nigerian SMEs, but works for most small businesses.'
+    a: 'Perfect for restaurants, retail, services, e-commerce - any SME with cash flow needs.'
   }
 ]
 
 export default function LandingFAQ() {
   const [open, setOpen] = useState<number | null>(null)
+
   return (
     <section id="faq" className="py-16 bg-white">
-      <div className="max-w-3xl mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-8 text-center">
-          Frequently Asked Questions
-        </h2>
-        <div className="space-y-4">
-          {faqs.map((faq, i) => (
-            <div key={i} className="border border-primary/10 rounded-xl bg-background-light">
-              <button
-                className="w-full flex justify-between items-center px-6 py-4 text-left focus:outline-none"
-                onClick={() => setOpen(open === i ? null : i)}
-              >
-                <span className="font-medium text-text-primary">{faq.q}</span>
-                <FiChevronDown className={`h-5 w-5 text-primary transition-transform ${open === i ? 'rotate-180' : ''}`} />
-              </button>
-              {open === i && (
-                <div className="px-6 pb-4 text-text-secondary text-sm animate-fadeIn">
-                  {faq.a}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+      <div className="max-w-4xl mx-auto px-4">
+        <ScrollAnimation>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-text-primary mb-4">Frequently Asked Questions</h2>
+            <p className="text-xl text-text-secondary">Everything you need to know about CashFlow Co-Pilot</p>
+          </div>
+        </ScrollAnimation>
+        
+        <ScrollAnimation delay={300}>
+          <div className="space-y-6">
+            {faqs.map((faq, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
+                <button
+                  className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-background-light transition-colors"
+                  onClick={() => setOpen(open === index ? null : index)}
+                >
+                  <span className="font-semibold text-text-primary">{faq.q}</span>
+                  {open === index ? (
+                    <FiChevronUp className="text-primary" />
+                  ) : (
+                    <FiChevronDown className="text-primary" />
+                  )}
+                </button>
+                {open === index && (
+                  <div className="px-6 pb-4 text-text-secondary">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </ScrollAnimation>
       </div>
     </section>
   )
