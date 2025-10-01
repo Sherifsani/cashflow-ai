@@ -19,12 +19,11 @@ export default function Step2Business({ form, errors, onChange, businessTypes, r
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Business Name</label>
         <TextInput
           name="businessName"
           value={form.businessName}
           onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
-          placeholder="e.g. Mama's Kitchen Restaurant"
+          placeholder="Business Name"
           error={errors.businessName}
           icon={<FiBriefcase className="h-5 w-5 text-gray-400" />}
         />
@@ -42,12 +41,11 @@ export default function Step2Business({ form, errors, onChange, businessTypes, r
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Business Location</label>
         <TextInput
           name="businessLocation"
           value={form.businessLocation}
           onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
-          placeholder="e.g. Ikeja, Lagos"
+          placeholder="Business Location"
           error={errors.businessLocation}
           icon={<FiMapPin className="h-5 w-5 text-gray-400" />}
         />

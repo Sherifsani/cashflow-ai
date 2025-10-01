@@ -14,19 +14,19 @@ export default function FormNavigation({ currentStep, loading, onPrev, onNext }:
   return (
     <div className="flex justify-between pt-6">
       {currentStep > 1 && (
-        <button type="button" onClick={onPrev} className="flex items-center px-6 py-3 text-gray-600 hover:text-gray-900 font-medium">
+        <button type="button" onClick={onPrev} className="w-full flex justify-center items-center px-6 py-3 text-[#6B7280] hover:text-[#1F2937] font-medium">
           <FiArrowLeft className="h-4 w-4 mr-2" />
           Previous
         </button>
       )}
 
       {currentStep < 3 ? (
-        <button type="button" onClick={onNext} className="flex items-center ml-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all">
+        <button type="button" onClick={onNext} className="bg-[#00A878] w-full flex justify-center items-center ml-auto text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#008f68] hover:shadow-lg transform hover:scale-105 transition-all">
           Continue
           <FiArrowRight className="h-4 w-4 ml-2" />
         </button>
       ) : (
-        <button type="submit" disabled={loading} className="flex items-center ml-auto bg-gradient-to-r from-green-600 to-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
+        <button type="submit" disabled={loading} className="bg-[#00A878] w-full flex justify-center items-center ml-auto text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#008f68] hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
           {loading ? (
             <>
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>

@@ -4,7 +4,7 @@ import React from 'react';
 import { FiCheck } from 'react-icons/fi';
 
 const benefits = [
-  "14-day free trial (no credit card required)",
+//   "14-day free trial (no credit card required)",
   "Instant cash flow forecasting",
   "WhatsApp alerts for cash shortages",
   "AI-powered business insights",

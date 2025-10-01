@@ -16,7 +16,7 @@ export default function Step3Preferences({ form, errors, onChange }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-4">How would you like to receive cash flow alerts?</label>
+        <div className="mb-4 text-sm font-semibold text-gray-700">How would you like to receive cash flow alerts?</div>
         <RadioGroup
           name="alertPreference"
           value={form.alertPreference}
@@ -30,7 +30,6 @@ export default function Step3Preferences({ form, errors, onChange }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">How did you hear about us?</label>
         <Select
           name="hearAboutUs"
           value={form.hearAboutUs}
@@ -47,9 +46,9 @@ export default function Step3Preferences({ form, errors, onChange }: Props) {
         />
       </div>
 
-      <div className="bg-gray-50 p-4 rounded-lg">
+      <div className="bg-[#F4F6F9] p-4 rounded-lg border border-[#D1D5DB]">
         <Checkbox
-          label={<span>I agree to the <a href="#" className="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a></span>}
+          label={<span>I agree to the <a href="#" className="text-[#00A878] hover:underline">Terms of Service</a> and <a href="#" className="text-[#00A878] hover:underline">Privacy Policy</a></span>}
           checked={false}
           onChange={() => {}}
         />
