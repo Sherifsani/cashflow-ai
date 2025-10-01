@@ -1,4 +1,39 @@
 @import "tailwindcss";
 
+/* Custom color variables for the brand */
+:root {
+  --brand-teal: #00A878;
+  --brand-teal-dark: #008f68;
+  --brand-gray-dark: #2D3540;
+  --brand-gray-light: #F4F6F9;
+  --brand-text-dark: #1F2937;
+  --brand-text-medium: #6B7280;
+  --brand-border: #D1D5DB;
+}
+
+/* Custom utility classes */
+.bg-brand-teal { background-color: var(--brand-teal); }
+.bg-brand-teal-dark { background-color: var(--brand-teal-dark); }
+.bg-brand-gray-dark { background-color: var(--brand-gray-dark); }
+.bg-brand-gray-light { background-color: var(--brand-gray-light); }
+
+.text-brand-teal { color: var(--brand-teal); }
+.text-brand-teal-dark { color: var(--brand-teal-dark); }
+.text-brand-text-dark { color: var(--brand-text-dark); }
+.text-brand-text-medium { color: var(--brand-text-medium); }
+
+.border-brand-border { border-color: var(--brand-border); }
+.border-brand-teal { border-color: var(--brand-teal); }
+
+/* Focus states */
+.focus\:ring-brand-teal:focus {
+  --tw-ring-color: var(--brand-teal);
+  --tw-ring-opacity: 0.5;
+}
+
+.hover\:bg-brand-teal-dark:hover { background-color: var(--brand-teal-dark); }
+.hover\:text-brand-teal-dark:hover { color: var(--brand-teal-dark); }
+.hover\:text-brand-text-dark:hover { color: var(--brand-text-dark); }
+
 
 

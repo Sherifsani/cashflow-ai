@@ -46,9 +46,9 @@ export default function Step3Preferences({ form, errors, onChange }: Props) {
         />
       </div>
 
-      <div className="bg-[#F4F6F9] p-4 rounded-lg border border-[#D1D5DB]">
+      <div className="bg-app-bg-light p-4 rounded-lg border border-app-border">
         <Checkbox
-          label={<span>I agree to the <a href="#" className="text-[#00A878] hover:underline">Terms of Service</a> and <a href="#" className="text-[#00A878] hover:underline">Privacy Policy</a></span>}
+          label={<span>I agree to the <a href="#" className="text-primary hover:underline">Terms of Service</a> and <a href="#" className="text-primary hover:underline">Privacy Policy</a></span>}
           checked={false}
           onChange={() => {}}
         />

@@ -31,19 +31,19 @@ export default function TextInput({ name, value, onChange, placeholder = '', err
                     onChange={onChange}
                     placeholder=" "
                     aria-label={placeholder || name}
-                    className={`peer block w-full ${inputPadding} pr-3 pb-1 pt-4 border rounded-lg bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00A878] ${error ? 'border-red-300 bg-red-50' : 'border-[#D1D5DB]'} ${className}`}
+                    className={`peer block w-full ${inputPadding} pr-3 pb-1 pt-4 border rounded-lg bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${error ? 'border-red-300 bg-red-50' : 'border-app-border'} ${className}`}
                     autoFocus={autoFocus}
                 />
 
                 <label
                     htmlFor={name}
-                    className={`absolute ${leftOffset} top-0 -translate-y-0 px-1 text-[#6B7280] text-sm transition-all duration-150 pointer-events-none peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-[#6B7280] peer-focus:top-0 peer-focus:-translate-y-0 peer-focus:text-[#00A878] peer-focus-visible:text-[#00A878] peer-focus:peer-placeholder-shown:text-sm`}
+                    className={`absolute ${leftOffset} top-0 -translate-y-0 px-1 text-app-text-secondary text-sm transition-all duration-150 pointer-events-none peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-app-text-secondary peer-focus:top-0 peer-focus:-translate-y-0 peer-focus:text-primary peer-focus-visible:text-primary peer-focus:peer-placeholder-shown:text-sm`}
                 >
                     {placeholder}
                 </label>
 
                 {icon && (
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#D1D5DB] peer-focus:text-[#00A878]" aria-hidden>
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-border peer-focus:text-primary" aria-hidden>
                         {/* icon color: active when field has value or on focus */}
                         <span className="transition-colors duration-150 text-inherit">
                             {icon}

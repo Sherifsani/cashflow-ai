@@ -19,15 +19,15 @@ export const ProgressSteps: React.FC<{ currentStep: number }> = ({ currentStep }
         {steps.map((item) => (
           <div key={item.step} className="flex items-center">
             <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-4 ${
-              currentStep > item.step ? 'bg-[#10B981]' : currentStep === item.step ? 'bg-[#00A878] text-white' : 'bg-white/20'
+              currentStep > item.step ? 'bg-success' : currentStep === item.step ? 'bg-primary text-white' : 'bg-white/20'
             }`}>
               {currentStep > item.step ? <FiCheck className="h-4 w-4" /> : item.step}
             </div>
             <div>
-              <div className={`font-medium ${currentStep >= item.step ? 'text-white' : 'text-[#6B7280]'}`}>
+              <div className={`font-medium ${currentStep >= item.step ? 'text-white' : 'text-app-text-secondary'}`}>
                 {item.title}
               </div>
-              <div className="text-[#6B7280] text-sm">{item.desc}</div>
+              <div className="text-app-text-secondary text-sm">{item.desc}</div>
             </div>
           </div>
         ))}

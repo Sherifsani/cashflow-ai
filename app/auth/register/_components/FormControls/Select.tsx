@@ -16,7 +16,7 @@ const Select: React.FC<Props> = ({ name, value, onChange, options, error }) => (
       name={name}
       value={value}
       onChange={onChange}
-      className={`block w-full px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A878] ${error ? 'border-red-300 bg-red-50' : 'border-[#D1D5DB]'}`}>
+      className={`block w-full px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${error ? 'border-red-300 bg-red-50' : 'border-app-border'}`}>
       {options.map(opt => (
         <option key={opt.value} value={opt.value}>{opt.label}</option>
       ))}

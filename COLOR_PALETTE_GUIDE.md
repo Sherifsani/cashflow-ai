@@ -32,46 +32,61 @@ This document outlines the new color palette implemented across the entire CashF
 
 ### Buttons
 
-- **Primary CTA Buttons**: Use `#00A878` (Vibrant Teal)
-  - Hover state: `#008f68`
+- **Primary CTA Buttons**: Use `bg-primary` with `hover:bg-primary-hover`
   - Example: Continue buttons, Submit buttons, Sign up buttons
   
 ```jsx
-className="bg-[#00A878] hover:bg-[#008f68] text-white px-8 py-3 rounded-lg"
+className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-lg"
 ```
 
 ### Text Hierarchy
 
-1. **Headings/Primary Text**: `#1F2937` (Dark Gray)
-2. **Body Text/Secondary**: `#6B7280` (Medium Gray)
-3. **Disabled/Placeholder**: `#6B7280` with opacity
+1. **Headings/Primary Text**: `text-primary` 
+2. **Body Text/Secondary**: `text-secondary`
+3. **Disabled/Placeholder**: `text-light`
 
 ### Form Elements
 
-- **Input Borders**: `#D1D5DB` (Light Gray)
-- **Focus Ring**: `#00A878` (Vibrant Teal)
-- **Input Labels**: `#6B7280` (Medium Gray)
-- **Focus Labels**: `#00A878` (Vibrant Teal)
+- **Input Borders**: `border-border` 
+- **Focus Ring**: `focus:ring-primary`
+- **Input Labels**: `text-text-secondary`
+- **Focus Labels**: `peer-focus:text-primary`
 
 ```jsx
-className="border border-[#D1D5DB] focus:ring-2 focus:ring-[#00A878]"
+className="border border-border focus:ring-2 focus:ring-primary"
 ```
 
 ### Backgrounds
 
-- **Left Panel (Branding)**: `#2D3540` (Charcoal Gray)
-- **Right Panel (Forms)**: `#F4F6F9` (Off-White)
-- **Testimonial Cards**: `#374151` (Subtle Darker)
-- **Info Alerts**: `#00A878` with 10% opacity
+- **Left Panel (Branding)**: `bg-background-dark`
+- **Right Panel (Forms)**: `bg-background-light`
+- **Testimonial Cards**: `bg-background-testimonial`
+- **Info Alerts**: `bg-primary/10 border-primary/30`
 
 ### Links
 
-- **Default**: `#00A878` (Vibrant Teal)
-- **Hover**: `#008f68` (Darker Teal)
+- **Default**: `text-primary`
+- **Hover**: `hover:text-primary-hover`
 
 ```jsx
-className="text-[#00A878] hover:text-[#008f68] underline"
+className="text-primary hover:text-primary-hover underline"
 ```
+
+## Semantic Class Reference
+
+Instead of using hex codes directly, use these semantic Tailwind classes:
+
+| Purpose | Class Name | Equivalent Hex |
+|---------|------------|----------------|
+| **Primary Button** | `bg-primary` | `#00A878` |
+| **Primary Hover** | `bg-primary-hover` | `#008f68` |
+| **Dark Background** | `bg-background-dark` | `#2D3540` |
+| **Light Background** | `bg-background-light` | `#F4F6F9` |
+| **Primary Text** | `text-text-primary` | `#1F2937` |
+| **Secondary Text** | `text-text-secondary` | `#6B7280` |
+| **Input Border** | `border-border` | `#D1D5DB` |
+| **Success Color** | `bg-success` | `#10B981` |
+| **Primary Focus** | `focus:ring-primary` | `#00A878` |
 
 ## Files Updated
 

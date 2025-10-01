@@ -18,24 +18,24 @@ export default function FormHeader({ currentStep }: Props) {
 
   return (
     <div className="mb-8">
-      <button onClick={() => router.push('/')} className="flex items-center text-[#6B7280] hover:text-[#1F2937] mb-6 mx-auto lg:hidden">
+      <button onClick={() => router.push('/')} className="flex items-center text-app-text-secondary hover:text-app-text-primary mb-6 mx-auto lg:hidden">
         <FiArrowLeft className="h-4 w-4 mr-2" />
         Back to home
       </button>
 
       <div className="lg:hidden flex items-center justify-center mb-6">
-        <div className="bg-[#00A878] p-2 rounded-lg mr-3">
+        <div className="bg-primary p-2 rounded-lg mr-3">
           <FiTrendingUp className="h-6 w-6 text-white" />
         </div>
-        <span className="text-xl font-bold text-[#1F2937]">CashFlow Co-Pilot</span>
+        <span className="text-xl font-bold text-app-text-primary">CashFlow Co-Pilot</span>
       </div>
 
-      <h2 className="text-3xl font-bold text-[#1F2937] mb-2">
+      <h2 className="text-3xl font-bold text-app-text-primary mb-2">
         {currentStep === 1 && "Create Your Account"}
         {currentStep === 2 && "About Your Business"}
         {currentStep === 3 && "Final Setup"}
       </h2>
-      <p className="text-[#6B7280]">
+      <p className="text-app-text-secondary">
         {currentStep === 1 && "Let's start with your personal details"}
         {currentStep === 2 && "Help us understand your business better"}
         {currentStep === 3 && "Choose how you'd like to be notified"}
