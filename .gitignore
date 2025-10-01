@@ -43,3 +43,4 @@ yarn-error.log*
 
 # ignore any copilot notes files (covers copilot-notes..txt and other variants)
 copilot-notes*
+COPILOT_INSTRUCTIONS.md
