@@ -2,36 +2,19 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { 
-  FiTrendingUp, 
-  FiAlertTriangle, 
-  FiDollarSign, 
-  FiBarChart, 
-  FiUpload, 
-  FiMessageCircle, 
-  FiShield, 
-  FiZap,
-  FiArrowRight,
-  FiCheck,
-  FiStar,
-  FiUsers,
-  FiTarget,
-  FiClock,
-  FiMenu,
-  FiX,
-  FiPlay,
-  FiPhone,
-  FiMail,
-  FiMapPin
-} from 'react-icons/fi'
+import LandingNavbar from './_components/LandingNavbar'
+import LandingHero from './_components/LandingHero'
+import LandingFeatures from './_components/LandingFeatures'
+import LandingPricing from './_components/LandingPricing'
+import LandingTestimonial from './_components/LandingTestimonial'
+import LandingFAQ from './_components/LandingFAQ'
+import LandingFooter from './_components/LandingFooter'
 
 export default function CashFlowLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isVisible, setIsVisible] = useState({})
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userEmail, setUserEmail] = useState('')
 
-  // Check authentication status
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token')
@@ -43,121 +26,18 @@ export default function CashFlowLanding() {
     }
   }, [])
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(prev => ({ ...prev, [entry.target.id]: true }))
-          }
-        })
-      },
-      { threshold: 0.1 }
-    )
-
-    const elements = document.querySelectorAll('[id]')
-    elements.forEach((el) => observer.observe(el))
-
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
-      {/* Enhanced Navigation */}
-      <nav className="bg-white/90 backdrop-blur-md shadow-lg border-b border-gray-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                <FiTrendingUp className="h-6 w-6 text-white" />
-              </div>
-              <span className="ml-3 text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                CashFlow Co-Pilot
-              </span>
-            </div>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">Features</a>
-              <a href="#how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">How It Works</a>
-              <a href="#pricing" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">Pricing</a>
-              <a href="#contact" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">Contact</a>
-              
-              {isLoggedIn ? (
-                <div className="flex items-center space-x-4">
-                  <span className="text-gray-600 text-sm">Welcome back!</span>
-                  <a 
-                    href="/dashboard"
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2.5 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all font-semibold"
-                  >
-                    Go to Dashboard
-                  </a>
-                </div>
-              ) : (
-                <>
-                  <a href="/auth/login" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">Sign In</a>
-                  <a 
-                    href="/auth/register"
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2.5 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all font-semibold"
-                  >
-                    Get Started
-                  </a>
-                </>
-              )}
-            </div>
-
-            {/* Mobile menu button */}
-            <button 
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
-            </button>
-          </div>
-
-          {/* Mobile Navigation */}
-          {isMenuOpen && (
-            <div className="md:hidden border-t border-gray-100 py-4">
-              <div className="flex flex-col space-y-4">
-                <a href="#features" className="text-gray-600 hover:text-blue-600 font-medium">Features</a>
-                <a href="#how-it-works" className="text-gray-600 hover:text-blue-600 font-medium">How It Works</a>
-                <a href="#pricing" className="text-gray-600 hover:text-blue-600 font-medium">Pricing</a>
-                <a href="#contact" className="text-gray-600 hover:text-blue-600 font-medium">Contact</a>
-                
-                {isLoggedIn ? (
-                  <a 
-                    href="/dashboard"
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2.5 rounded-lg font-semibold text-center"
-                  >
-                    Go to Dashboard
-                  </a>
-                ) : (
-                  <>
-                    <a href="/auth/login" className="text-gray-600 hover:text-blue-600 font-medium">Sign In</a>
-                    <a 
-                      href="/auth/register"
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2.5 rounded-lg font-semibold text-center"
-                    >
-                      Get Started
-                    </a>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
-
-      {/* Enhanced Hero Section */}
-      <section id="hero" className="relative py-24 px-4 overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-          <div className="absolute top-32 right-10 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-cyan-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto text-center">
+    <div className="min-h-screen bg-gradient-to-br from-background-light to-white">
+      <LandingNavbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} isLoggedIn={isLoggedIn} userEmail={userEmail} />
+      <LandingHero />
+      <LandingFeatures />
+      <LandingPricing />
+      <LandingTestimonial />
+      <LandingFAQ />
+      <LandingFooter />
+    </div>
+  )
+}
           <div className="max-w-4xl mx-auto">
             {/* Announcement Badge */}
             <div className="inline-flex items-center bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-full px-6 py-2 mb-8">
