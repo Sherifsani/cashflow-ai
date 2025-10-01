@@ -75,15 +75,22 @@ export default function BusinessSetupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-background-light to-white">
       <div className="max-w-2xl mx-auto px-4 py-8">
         <SetupHeader 
           currentStep={currentStep}
           getStepTitle={getStepTitle}
         />
         
-        <div className="bg-white rounded-lg shadow-lg p-8 mt-8">
-          {renderStepContent()}
+        <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-8 mt-8 transition-all duration-300">
+          {/* <div className="mb-6">
+            <h2 className="text-xl font-semibold text-text-primary">{getStepTitle()}</h2>
+            <div className="w-12 h-1 bg-primary rounded-full mt-2"></div>
+          </div> */}
+          
+          <div className="transition-all duration-300 ease-in-out">
+            {renderStepContent()}
+          </div>
           
           <SetupNavigation
             currentStep={currentStep}

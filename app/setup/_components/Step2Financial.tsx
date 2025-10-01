@@ -23,12 +23,12 @@ export default function Step2Financial({
 }: Props) {
   return (
     <div className="space-y-6">
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+      <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
         <div className="flex items-start">
-          <FiDollarSign className="h-5 w-5 text-blue-600 mr-3 mt-0.5" />
+          <FiDollarSign className="h-5 w-5 text-primary mr-3 mt-0.5" />
           <div>
-            <h3 className="font-medium text-blue-900">Your money stays safe!</h3>
-            <p className="text-sm text-blue-700 mt-1">
+            <h3 className="font-medium text-text-primary">Your money stays safe!</h3>
+            <p className="text-sm text-text-secondary mt-1">
               We only track your finances - your money remains in your bank account.
             </p>
           </div>
@@ -36,7 +36,7 @@ export default function Step2Financial({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-text-primary mb-2">
           Starting Balance (Current cash in bank) *
         </label>
         <div className="relative">
@@ -52,9 +52,9 @@ export default function Step2Financial({
       </div>
 
       {/* Capital Allocation Section */}
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-        <h4 className="font-medium text-blue-900 mb-2">How will you use your starting capital?</h4>
-        <p className="text-sm text-blue-700 mb-3">
+      <div className="bg-background-light p-4 rounded-lg border border-gray-200">
+        <h4 className="font-medium text-text-primary mb-2">How will you use your starting capital?</h4>
+        <p className="text-sm text-text-secondary mb-3">
           Understanding how you plan to spend your ₦{formatCurrency(businessData.startingBalance)} helps us track your cash runway.
         </p>
       </div>
@@ -94,14 +94,14 @@ export default function Step2Financial({
       </div>
 
       {businessData.startingBalance && businessData.monthlyExpenses && (
-        <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+        <div className="bg-primary/10 p-4 rounded-lg border border-primary/30">
           <div className="flex items-center">
-            <FiCheck className="h-5 w-5 text-green-600 mr-3" />
+            <FiCheck className="h-5 w-5 text-primary mr-3" />
             <div>
-              <h3 className="font-medium text-green-900">
+              <h3 className="font-medium text-text-primary">
                 Cash Runway: {calculateRunwayMonths()} months
               </h3>
-              <p className="text-sm text-green-700">
+              <p className="text-sm text-text-secondary">
                 Your ₦{formatCurrency(businessData.startingBalance)} can cover expenses for about {calculateRunwayMonths()} months
               </p>
             </div>

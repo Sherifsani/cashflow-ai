@@ -71,12 +71,12 @@ export default function Step3Goals({ businessData, handleInputChange }: Props) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+      <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
         <div className="flex items-start">
-          <FiTarget className="h-5 w-5 text-blue-600 mr-3 mt-0.5" />
+          <FiTarget className="h-5 w-5 text-primary mr-3 mt-0.5" />
           <div>
-            <h3 className="font-medium text-blue-900">Define your financial goals</h3>
-            <p className="text-sm text-blue-700 mt-1">
+            <h3 className="font-medium text-text-primary">Define your financial goals</h3>
+            <p className="text-sm text-text-secondary mt-1">
               Understanding your goals helps us tailor recommendations for your business growth.
             </p>
           </div>
@@ -84,7 +84,7 @@ export default function Step3Goals({ businessData, handleInputChange }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-4">
+        <label className="block text-sm font-medium text-text-primary mb-4">
           What's your primary financial goal for this business? *
         </label>
         <div className="space-y-3">
@@ -106,7 +106,7 @@ export default function Step3Goals({ businessData, handleInputChange }: Props) {
                     type="radio"
                     checked={businessData.goal === goal.id}
                     onChange={() => handleInputChange('goal', goal.id)}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                    className="h-4 w-4 text-primary focus:ring-primary border-gray-300"
                   />
                 </div>
                 <div className="ml-3 flex-1">
@@ -134,8 +134,8 @@ export default function Step3Goals({ businessData, handleInputChange }: Props) {
       </div>
 
       {businessData.goal === 'other' && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="animate-fadeIn">
+          <label className="block text-sm font-medium text-text-primary mb-2">
             Please describe your primary goal *
           </label>
           <textarea
@@ -143,7 +143,7 @@ export default function Step3Goals({ businessData, handleInputChange }: Props) {
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('customGoal', e.target.value)}
             placeholder="Describe what you want to achieve with your business..."
             rows={3}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors resize-none"
           />
         </div>
       )}

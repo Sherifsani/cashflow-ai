@@ -12,12 +12,12 @@ interface Props {
 export default function Step4Contact({ businessData, handleInputChange }: Props) {
   return (
     <div className="space-y-6">
-      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+      <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
         <div className="flex items-start">
-          <FiPhone className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+          <FiPhone className="h-5 w-5 text-primary mr-3 mt-0.5" />
           <div>
-            <h3 className="font-medium text-green-900">Stay connected to your business</h3>
-            <p className="text-sm text-green-700 mt-1">
+            <h3 className="font-medium text-text-primary">Stay connected to your business</h3>
+            <p className="text-sm text-text-secondary mt-1">
               Choose how you'd like to receive updates about your cash flow and business insights.
             </p>
           </div>
@@ -25,10 +25,10 @@ export default function Step4Contact({ businessData, handleInputChange }: Props)
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-text-primary mb-2">
           Phone Number *
         </label>
-        <p className="text-xs text-gray-500 mb-2">We'll use this for important account notifications</p>
+        <p className="text-xs text-text-secondary mb-2">We'll use this for important account notifications</p>
         <div className="relative">
           <span className="absolute left-3 top-3 text-gray-500">+234</span>
           <input
@@ -36,7 +36,7 @@ export default function Step4Contact({ businessData, handleInputChange }: Props)
             value={businessData.phone}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('phone', e.target.value)}
             placeholder="8012345678"
-            className="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
           />
         </div>
       </div>
@@ -44,16 +44,16 @@ export default function Step4Contact({ businessData, handleInputChange }: Props)
       <div className="space-y-4">
         <h3 className="text-sm font-medium text-gray-700">Notification Preferences</h3>
         
-        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+        <div className="bg-background-light p-4 rounded-lg border border-gray-200 hover:border-primary/30 transition-colors">
           <div className="flex items-center justify-between">
             <div className="flex items-start">
-              <FiMessageSquare className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+              <FiMessageSquare className="h-5 w-5 text-primary mr-3 mt-0.5" />
               <div>
-                <h4 className="font-medium text-gray-900">WhatsApp Alerts</h4>
-                <p className="text-sm text-gray-600 mt-1">
+                <h4 className="font-medium text-text-primary">WhatsApp Alerts</h4>
+                <p className="text-sm text-text-secondary mt-1">
                   Get instant notifications for low cash alerts, payment reminders, and weekly summaries
                 </p>
-                <p className="text-xs text-green-600 mt-1 font-medium">
+                <p className="text-xs text-primary mt-1 font-medium">
                   Recommended for Nigerian businesses
                 </p>
               </div>
@@ -65,18 +65,18 @@ export default function Step4Contact({ businessData, handleInputChange }: Props)
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('whatsappAlerts', e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
             </label>
           </div>
         </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+        <div className="bg-background-light p-4 rounded-lg border border-gray-200 hover:border-primary/30 transition-colors">
           <div className="flex items-center justify-between">
             <div className="flex items-start">
-              <FiMail className="h-5 w-5 text-blue-600 mr-3 mt-0.5" />
+              <FiMail className="h-5 w-5 text-primary mr-3 mt-0.5" />
               <div>
-                <h4 className="font-medium text-gray-900">Email Reports</h4>
-                <p className="text-sm text-gray-600 mt-1">
+                <h4 className="font-medium text-text-primary">Email Reports</h4>
+                <p className="text-sm text-text-secondary mt-1">
                   Receive detailed weekly and monthly financial reports with insights and recommendations
                 </p>
               </div>
@@ -88,7 +88,7 @@ export default function Step4Contact({ businessData, handleInputChange }: Props)
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('emailReports', e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
             </label>
           </div>
         </div>
