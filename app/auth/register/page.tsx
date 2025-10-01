@@ -39,11 +39,11 @@ const Register = () => {
     <div className="max-h-scr grid grid-cols-2">
       <BrandingPanel currentStep={currentStep} />
 
-      <div className="bg-[#F4F6F9] flex-1 flex flex-col justify-center px-8 sm:px-12 lg:px-16 overflow-y-scro">
-        <div className="bg-[#F4F6F9] max-w-lg w-full mx-auto">
+      <div className="bg-brand-gray-light flex-1 flex flex-col justify-center px-8 sm:px-12 lg:px-16 overflow-y-scro">
+        <div className="bg-brand-gray-light max-w-lg w-full mx-auto">
           <FormHeader currentStep={currentStep} />
 
-          <form onSubmit={handleSubmit} className="bg-[#F4F6F9] space-y-6">
+          <form onSubmit={handleSubmit} className="bg-brand-gray-light space-y-6">
             {errors.submit && (
               <Alert type="error">{errors.submit}</Alert>
             )}

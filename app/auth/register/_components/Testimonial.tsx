@@ -3,7 +3,7 @@
 import React from 'react';
 
 export const Testimonial: React.FC = () => (
-  <div className="relative z-10 bg-[#374151] backdrop-blur-sm rounded-xl p-6 mt-10">
+  <div className="relative z-10 bg-testimonial backdrop-blur-sm rounded-xl p-6 mt-10">
     <p className="text-blue-100 italic mb-3">
       "Setup was so easy! Within 5 minutes I could see my cash flow predictions. Game changer for my restaurant!"
     </p>
