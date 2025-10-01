@@ -235,13 +235,13 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background-light">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-border-brand">
+      <header className="bg-background-dark shadow-sm border-b border-border-brand">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo and Brand */}
             <div className="flex items-center">
               <FiBarChart className="text-primary" size={28} />
-              <span className="ml-2 text-xl font-bold text-text-primary">CashFlow Co-Pilot</span>
+              <span className="ml-2 text-xl font-bold text-white">CashFlow Co-Pilot</span>
             </div>
 
             {/* Desktop Navigation */}
@@ -249,27 +249,27 @@ export default function Dashboard() {
               <Link href="/dashboard" className="text-primary font-medium border-b-2 border-primary pb-1">
                 Overview
               </Link>
-              <Link href="/dashboard/add-transaction" className="text-text-secondary hover:text-primary transition-colors">
+              <Link href="/dashboard/add-transaction" className="text-gray-300 hover:text-primary transition-colors">
                 Add Transaction
               </Link>
-              <Link href="/dashboard/upload" className="text-text-secondary hover:text-primary transition-colors">
+              <Link href="/dashboard/upload" className="text-gray-300 hover:text-primary transition-colors">
                 Upload Data
               </Link>
-              <Link href="/dashboard/chat" className="text-text-secondary hover:text-primary transition-colors">
+              <Link href="/dashboard/chat" className="text-gray-300 hover:text-primary transition-colors">
                 AI Assistant
               </Link>
-              <Link href="/dashboard/settings" className="text-text-secondary hover:text-primary transition-colors">
+              <Link href="/dashboard/settings" className="text-gray-300 hover:text-primary transition-colors">
                 Settings
               </Link>
             </nav>
 
             {/* User Menu */}
             <div className="flex items-center space-x-4">
-              <button className="p-2 text-text-secondary hover:text-primary transition-colors">
+              <button className="p-2 text-gray-300 hover:text-primary transition-colors">
                 <FiBell size={20} />
               </button>
               <div className="relative group">
-                <button className="flex items-center space-x-2 text-text-secondary hover:text-primary transition-colors">
+                <button className="flex items-center space-x-2 text-gray-300 hover:text-primary transition-colors">
                   <FiUser size={20} />
                   <span className="hidden sm:block">{user?.email}</span>
                 </button>
@@ -289,7 +289,7 @@ export default function Dashboard() {
               {/* Mobile menu button */}
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="md:hidden p-2 text-text-secondary hover:text-primary transition-colors"
+                className="md:hidden p-2 text-gray-300 hover:text-primary transition-colors"
               >
                 <FiBarChart size={20} />
               </button>
@@ -299,21 +299,21 @@ export default function Dashboard() {
 
         {/* Mobile Navigation */}
         {showMobileMenu && (
-          <div className="md:hidden bg-white border-t border-border-brand">
+          <div className="md:hidden bg-background-dark border-t border-gray-600">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              <Link href="/dashboard" className="block px-3 py-2 text-primary font-medium bg-background-light rounded-md">
+              <Link href="/dashboard" className="block px-3 py-2 text-primary font-medium bg-gray-700 rounded-md">
                 Overview
               </Link>
-              <Link href="/dashboard/add-transaction" className="block px-3 py-2 text-text-secondary hover:text-primary hover:bg-background-light rounded-md transition-colors">
+              <Link href="/dashboard/add-transaction" className="block px-3 py-2 text-gray-300 hover:text-primary hover:bg-gray-700 rounded-md transition-colors">
                 Add Transaction
               </Link>
-              <Link href="/dashboard/upload" className="block px-3 py-2 text-text-secondary hover:text-primary hover:bg-background-light rounded-md transition-colors">
+              <Link href="/dashboard/upload" className="block px-3 py-2 text-gray-300 hover:text-primary hover:bg-gray-700 rounded-md transition-colors">
                 Upload Data
               </Link>
-              <Link href="/dashboard/chat" className="block px-3 py-2 text-text-secondary hover:text-primary hover:bg-background-light rounded-md transition-colors">
+              <Link href="/dashboard/chat" className="block px-3 py-2 text-gray-300 hover:text-primary hover:bg-gray-700 rounded-md transition-colors">
                 AI Assistant
               </Link>
-              <Link href="/dashboard/settings" className="block px-3 py-2 text-text-secondary hover:text-primary hover:bg-background-light rounded-md transition-colors">
+              <Link href="/dashboard/settings" className="block px-3 py-2 text-gray-300 hover:text-primary hover:bg-gray-700 rounded-md transition-colors">
                 Settings
               </Link>
             </div>
@@ -421,7 +421,7 @@ export default function Dashboard() {
           cashRunway.status === 'positive' ? 'bg-green-50 border-green-200' :
           cashRunway.status === 'good' ? 'bg-blue-50 border-blue-200' :
           cashRunway.status === 'warning' ? 'bg-yellow-50 border-yellow-200' :
-          'bg-red-50 border-red-200'
+          'bg-background-dark border-red-200'
         }`}>
           <div className="flex items-start space-x-4">
             <div className={`p-2 rounded-full ${
@@ -442,7 +442,7 @@ export default function Dashboard() {
                 cashRunway.status === 'positive' ? 'text-green-800' :
                 cashRunway.status === 'good' ? 'text-blue-800' :
                 cashRunway.status === 'warning' ? 'text-yellow-800' :
-                'text-red-800'
+                'text-white'
               }`}>
                 Cash Runway: {cashRunway.days === '∞' ? 'Unlimited' : `${cashRunway.days} days`}
               </h3>
@@ -450,12 +450,14 @@ export default function Dashboard() {
                 cashRunway.status === 'positive' ? 'text-green-700' :
                 cashRunway.status === 'good' ? 'text-blue-700' :
                 cashRunway.status === 'warning' ? 'text-yellow-700' :
-                'text-red-700'
+                'text-gray-200'
               }>
                 {cashRunway.message}
               </p>
               {cashRunway.monthlyBurn && cashRunway.monthlyBurn > 0 && (
-                <p className="text-sm text-brand-gray mt-1">
+                <p className={`text-sm mt-1 ${
+                  cashRunway.status === 'critical' ? 'text-gray-300' : 'text-text-secondary'
+                }`}>
                   Monthly burn rate: {formatCurrency(cashRunway.monthlyBurn)}
                 </p>
               )}
@@ -469,8 +471,8 @@ export default function Dashboard() {
           <div className="lg:col-span-2 space-y-6">
             {/* Time Range Selector */}
             <div className="bg-white p-6 rounded-lg shadow-sm border border-border-brand">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                <h2 className="text-lg font-semibold text-text-primary mb-4 sm:mb-0">Cash Flow Trend</h2>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 p-4 bg-background-dark rounded-lg">
+                <h2 className="text-lg font-semibold text-white mb-4 sm:mb-0">Cash Flow Trend</h2>
                 <div className="flex space-x-2">
                   {(['7days', '30days', '90days', '1year'] as TimeRange[]).map((range) => (
                     <button
@@ -500,8 +502,8 @@ export default function Dashboard() {
 
             {/* AI Insights */}
             <div className="bg-white p-6 rounded-lg shadow-sm border border-border-brand">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-text-primary">AI-Powered Insights</h2>
+              <div className="flex items-center justify-between mb-6 p-4 bg-background-dark rounded-lg">
+                <h2 className="text-lg font-semibold text-white">AI-Powered Insights</h2>
                 <FiZap className="text-primary" size={20} />
               </div>
               
@@ -532,7 +534,9 @@ export default function Dashboard() {
           <div className="space-y-6">
             {/* Quick Actions */}
             <div className="bg-white p-6 rounded-lg shadow-sm border border-border-brand">
-              <h3 className="text-lg font-semibold text-text-primary mb-4">Quick Actions</h3>
+              <div className="bg-background-dark p-4 rounded-lg mb-4">
+                <h3 className="text-lg font-semibold text-white">Quick Actions</h3>
+              </div>
               <div className="space-y-3">
                 <Link
                   href="/dashboard/add-transaction"
