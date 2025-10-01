@@ -223,53 +223,53 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-brand-gray-light flex items-center justify-center">
+      <div className="min-h-screen bg-background-light flex items-center justify-center">
         <div className="flex items-center space-x-2">
-          <FiRefreshCw className="animate-spin text-brand-teal" size={24} />
-          <span className="text-brand-gray-dark">Loading dashboard...</span>
+          <FiRefreshCw className="animate-spin text-primary" size={24} />
+          <span className="text-text-primary">Loading dashboard...</span>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-brand-gray-light">
+    <div className="min-h-screen bg-background-light">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-brand-gray">
+      <header className="bg-white shadow-sm border-b border-border-brand">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo and Brand */}
             <div className="flex items-center">
-              <FiBarChart className="text-brand-teal" size={28} />
-              <span className="ml-2 text-xl font-bold text-brand-gray-dark">CashFlow Co-Pilot</span>
+              <FiBarChart className="text-primary" size={28} />
+              <span className="ml-2 text-xl font-bold text-text-primary">CashFlow Co-Pilot</span>
             </div>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-8">
-              <Link href="/dashboard" className="text-brand-teal font-medium border-b-2 border-brand-teal pb-1">
+              <Link href="/dashboard" className="text-primary font-medium border-b-2 border-primary pb-1">
                 Overview
               </Link>
-              <Link href="/dashboard/add-transaction" className="text-brand-gray hover:text-brand-teal transition-colors">
+              <Link href="/dashboard/add-transaction" className="text-text-secondary hover:text-primary transition-colors">
                 Add Transaction
               </Link>
-              <Link href="/dashboard/upload" className="text-brand-gray hover:text-brand-teal transition-colors">
+              <Link href="/dashboard/upload" className="text-text-secondary hover:text-primary transition-colors">
                 Upload Data
               </Link>
-              <Link href="/dashboard/chat" className="text-brand-gray hover:text-brand-teal transition-colors">
+              <Link href="/dashboard/chat" className="text-text-secondary hover:text-primary transition-colors">
                 AI Assistant
               </Link>
-              <Link href="/dashboard/settings" className="text-brand-gray hover:text-brand-teal transition-colors">
+              <Link href="/dashboard/settings" className="text-text-secondary hover:text-primary transition-colors">
                 Settings
               </Link>
             </nav>
 
             {/* User Menu */}
             <div className="flex items-center space-x-4">
-              <button className="p-2 text-brand-gray hover:text-brand-teal transition-colors">
+              <button className="p-2 text-text-secondary hover:text-primary transition-colors">
                 <FiBell size={20} />
               </button>
               <div className="relative group">
-                <button className="flex items-center space-x-2 text-brand-gray hover:text-brand-teal transition-colors">
+                <button className="flex items-center space-x-2 text-text-secondary hover:text-primary transition-colors">
                   <FiUser size={20} />
                   <span className="hidden sm:block">{user?.email}</span>
                 </button>
@@ -277,7 +277,7 @@ export default function Dashboard() {
                   <div className="py-1">
                     <button
                       onClick={handleLogout}
-                      className="flex items-center space-x-2 px-4 py-2 text-sm text-brand-gray hover:bg-brand-gray-light hover:text-brand-teal w-full text-left"
+                      className="flex items-center space-x-2 px-4 py-2 text-sm text-text-secondary hover:bg-background-light hover:text-primary w-full text-left"
                     >
                       <FiLogOut size={16} />
                       <span>Logout</span>
@@ -289,7 +289,7 @@ export default function Dashboard() {
               {/* Mobile menu button */}
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="md:hidden p-2 text-brand-gray hover:text-brand-teal transition-colors"
+                className="md:hidden p-2 text-text-secondary hover:text-primary transition-colors"
               >
                 <FiBarChart size={20} />
               </button>
@@ -299,21 +299,21 @@ export default function Dashboard() {
 
         {/* Mobile Navigation */}
         {showMobileMenu && (
-          <div className="md:hidden bg-white border-t border-brand-gray">
+          <div className="md:hidden bg-white border-t border-border-brand">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              <Link href="/dashboard" className="block px-3 py-2 text-brand-teal font-medium bg-brand-gray-light rounded-md">
+              <Link href="/dashboard" className="block px-3 py-2 text-primary font-medium bg-background-light rounded-md">
                 Overview
               </Link>
-              <Link href="/dashboard/add-transaction" className="block px-3 py-2 text-brand-gray hover:text-brand-teal hover:bg-brand-gray-light rounded-md transition-colors">
+              <Link href="/dashboard/add-transaction" className="block px-3 py-2 text-text-secondary hover:text-primary hover:bg-background-light rounded-md transition-colors">
                 Add Transaction
               </Link>
-              <Link href="/dashboard/upload" className="block px-3 py-2 text-brand-gray hover:text-brand-teal hover:bg-brand-gray-light rounded-md transition-colors">
+              <Link href="/dashboard/upload" className="block px-3 py-2 text-text-secondary hover:text-primary hover:bg-background-light rounded-md transition-colors">
                 Upload Data
               </Link>
-              <Link href="/dashboard/chat" className="block px-3 py-2 text-brand-gray hover:text-brand-teal hover:bg-brand-gray-light rounded-md transition-colors">
+              <Link href="/dashboard/chat" className="block px-3 py-2 text-text-secondary hover:text-primary hover:bg-background-light rounded-md transition-colors">
                 AI Assistant
               </Link>
-              <Link href="/dashboard/settings" className="block px-3 py-2 text-brand-gray hover:text-brand-teal hover:bg-brand-gray-light rounded-md transition-colors">
+              <Link href="/dashboard/settings" className="block px-3 py-2 text-text-secondary hover:text-primary hover:bg-background-light rounded-md transition-colors">
                 Settings
               </Link>
             </div>
@@ -325,10 +325,10 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-brand-gray-dark">
+          <h1 className="text-3xl font-bold text-text-primary">
             Welcome back, {mockData.businessName}! 👋
           </h1>
-          <p className="text-brand-gray mt-2">
+          <p className="text-text-secondary mt-2">
             Here's an overview of your business cash flow and financial health.
           </p>
         </div>
@@ -336,16 +336,16 @@ export default function Dashboard() {
         {/* Key Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Current Balance */}
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-brand-gray">
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-border-brand">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-brand-gray">Current Balance</p>
-                <p className="text-2xl font-bold text-brand-gray-dark">
+                <p className="text-sm font-medium text-text-secondary">Current Balance</p>
+                <p className="text-2xl font-bold text-text-primary">
                   {formatCurrency(mockData.currentBalance)}
                 </p>
               </div>
-              <div className="p-3 bg-brand-teal/10 rounded-full">
-                <FiDollarSign className="text-brand-teal" size={24} />
+              <div className="p-3 bg-primary/10 rounded-full">
+                <FiDollarSign className="text-primary" size={24} />
               </div>
             </div>
             <div className="mt-4 flex items-center">
@@ -355,11 +355,11 @@ export default function Dashboard() {
           </div>
 
           {/* Monthly Income */}
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-brand-gray">
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-border-brand">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-brand-gray">Monthly Income</p>
-                <p className="text-2xl font-bold text-brand-gray-dark">
+                <p className="text-sm font-medium text-text-secondary">Monthly Income</p>
+                <p className="text-2xl font-bold text-text-primary">
                   {formatCurrency(mockData.monthlyIncome)}
                 </p>
               </div>
@@ -374,11 +374,11 @@ export default function Dashboard() {
           </div>
 
           {/* Monthly Expenses */}
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-brand-gray">
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-border-brand">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-brand-gray">Monthly Expenses</p>
-                <p className="text-2xl font-bold text-brand-gray-dark">
+                <p className="text-sm font-medium text-text-secondary">Monthly Expenses</p>
+                <p className="text-2xl font-bold text-text-primary">
                   {formatCurrency(mockData.monthlyExpenses)}
                 </p>
               </div>
@@ -393,10 +393,10 @@ export default function Dashboard() {
           </div>
 
           {/* Cash Flow Health Score */}
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-brand-gray">
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-border-brand">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-brand-gray">Health Score</p>
+                <p className="text-sm font-medium text-text-secondary">Health Score</p>
                 <p className={`text-2xl font-bold ${getHealthScoreColor(mockData.healthScore)}`}>
                   {mockData.healthScore}/100
                 </p>
@@ -406,9 +406,9 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="mt-4">
-              <div className="w-full bg-brand-gray-light rounded-full h-2">
+              <div className="w-full bg-background-light rounded-full h-2">
                 <div 
-                  className="bg-brand-teal h-2 rounded-full transition-all duration-300"
+                  className="bg-primary h-2 rounded-full transition-all duration-300"
                   style={{ width: `${mockData.healthScore}%` }}
                 ></div>
               </div>
@@ -468,9 +468,9 @@ export default function Dashboard() {
           {/* Left Column - Charts and Analytics */}
           <div className="lg:col-span-2 space-y-6">
             {/* Time Range Selector */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-brand-gray">
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-border-brand">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                <h2 className="text-lg font-semibold text-brand-gray-dark mb-4 sm:mb-0">Cash Flow Trend</h2>
+                <h2 className="text-lg font-semibold text-text-primary mb-4 sm:mb-0">Cash Flow Trend</h2>
                 <div className="flex space-x-2">
                   {(['7days', '30days', '90days', '1year'] as TimeRange[]).map((range) => (
                     <button
@@ -478,8 +478,8 @@ export default function Dashboard() {
                       onClick={() => setSelectedTimeRange(range)}
                       className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
                         selectedTimeRange === range
-                          ? 'bg-brand-teal text-white'
-                          : 'text-brand-gray hover:text-brand-teal hover:bg-brand-gray-light'
+                          ? 'bg-primary text-white'
+                          : 'text-text-secondary hover:text-primary hover:bg-background-light'
                       }`}
                     >
                       {range === '7days' ? '7D' : range === '30days' ? '30D' : range === '90days' ? '90D' : '1Y'}
@@ -489,8 +489,8 @@ export default function Dashboard() {
               </div>
               
               {/* Placeholder for Chart */}
-              <div className="h-64 bg-brand-gray-light rounded-lg flex items-center justify-center">
-                <div className="text-center text-brand-gray">
+              <div className="h-64 bg-background-light rounded-lg flex items-center justify-center">
+                <div className="text-center text-text-secondary">
                   <FiBarChart size={48} className="mx-auto mb-2" />
                   <p>Cash flow chart will be displayed here</p>
                   <p className="text-sm">Integrate with charting library like Chart.js or Recharts</p>
@@ -499,27 +499,27 @@ export default function Dashboard() {
             </div>
 
             {/* AI Insights */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-brand-gray">
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-border-brand">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-brand-gray-dark">AI-Powered Insights</h2>
-                <FiZap className="text-brand-teal" size={20} />
+                <h2 className="text-lg font-semibold text-text-primary">AI-Powered Insights</h2>
+                <FiZap className="text-primary" size={20} />
               </div>
               
               <div className="space-y-4">
                 {mockData.aiInsights.map((insight, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-4 bg-brand-gray-light rounded-lg">
+                  <div key={index} className="flex items-start space-x-3 p-4 bg-background-light rounded-lg">
                     {getInsightIcon(insight.type)}
                     <div className="flex-1">
-                      <p className="text-brand-gray-dark text-sm">{insight.message}</p>
+                      <p className="text-text-primary text-sm">{insight.message}</p>
                     </div>
                   </div>
                 ))}
               </div>
               
-              <div className="mt-6 pt-4 border-t border-brand-gray">
+              <div className="mt-6 pt-4 border-t border-border-brand">
                 <Link 
                   href="/dashboard/chat"
-                  className="flex items-center space-x-2 text-brand-teal hover:text-brand-teal/80 transition-colors"
+                  className="flex items-center space-x-2 text-primary hover:text-primary-dark transition-colors"
                 >
                   <FiMessageCircle size={16} />
                   <span className="text-sm font-medium">Chat with AI for more insights</span>
@@ -531,51 +531,51 @@ export default function Dashboard() {
           {/* Right Column - Recent Activity & Quick Actions */}
           <div className="space-y-6">
             {/* Quick Actions */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-brand-gray">
-              <h3 className="text-lg font-semibold text-brand-gray-dark mb-4">Quick Actions</h3>
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-border-brand">
+              <h3 className="text-lg font-semibold text-text-primary mb-4">Quick Actions</h3>
               <div className="space-y-3">
                 <Link
                   href="/dashboard/add-transaction"
-                  className="flex items-center space-x-3 p-3 border border-brand-gray rounded-lg hover:bg-brand-gray-light hover:border-brand-teal transition-colors group"
+                  className="flex items-center space-x-3 p-3 border border-border-brand rounded-lg hover:bg-background-light hover:border-primary transition-colors group"
                 >
-                  <div className="p-2 bg-brand-teal/10 rounded-lg group-hover:bg-brand-teal group-hover:text-white transition-colors">
-                    <FiPlus className="text-brand-teal group-hover:text-white" size={16} />
+                  <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
+                    <FiPlus className="text-primary group-hover:text-white" size={16} />
                   </div>
-                  <span className="text-brand-gray-dark group-hover:text-brand-teal">Add Transaction</span>
+                  <span className="text-text-primary group-hover:text-primary">Add Transaction</span>
                 </Link>
                 
                 <Link
                   href="/dashboard/upload"
-                  className="flex items-center space-x-3 p-3 border border-brand-gray rounded-lg hover:bg-brand-gray-light hover:border-brand-teal transition-colors group"
+                  className="flex items-center space-x-3 p-3 border border-border-brand rounded-lg hover:bg-background-light hover:border-primary transition-colors group"
                 >
-                  <div className="p-2 bg-brand-teal/10 rounded-lg group-hover:bg-brand-teal group-hover:text-white transition-colors">
-                    <FiUpload className="text-brand-teal group-hover:text-white" size={16} />
+                  <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
+                    <FiUpload className="text-primary group-hover:text-white" size={16} />
                   </div>
-                  <span className="text-brand-gray-dark group-hover:text-brand-teal">Upload Bank Data</span>
+                  <span className="text-text-primary group-hover:text-primary">Upload Bank Data</span>
                 </Link>
                 
                 <Link
                   href="/dashboard/chat"
-                  className="flex items-center space-x-3 p-3 border border-brand-gray rounded-lg hover:bg-brand-gray-light hover:border-brand-teal transition-colors group"
+                  className="flex items-center space-x-3 p-3 border border-border-brand rounded-lg hover:bg-background-light hover:border-primary transition-colors group"
                 >
-                  <div className="p-2 bg-brand-teal/10 rounded-lg group-hover:bg-brand-teal group-hover:text-white transition-colors">
-                    <FiMessageCircle className="text-brand-teal group-hover:text-white" size={16} />
+                  <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
+                    <FiMessageCircle className="text-primary group-hover:text-white" size={16} />
                   </div>
-                  <span className="text-brand-gray-dark group-hover:text-brand-teal">Ask AI Assistant</span>
+                  <span className="text-text-primary group-hover:text-primary">Ask AI Assistant</span>
                 </Link>
               </div>
             </div>
 
             {/* Upcoming Payments */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-brand-gray">
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-border-brand">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-brand-gray-dark">Upcoming Payments</h3>
-                <FiCalendar className="text-brand-gray" size={20} />
+                <h3 className="text-lg font-semibold text-text-primary">Upcoming Payments</h3>
+                <FiCalendar className="text-text-secondary" size={20} />
               </div>
               
               <div className="space-y-3">
                 {mockData.upcomingPayments.map((payment, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-brand-gray-light rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 bg-background-light rounded-lg">
                     <div className="flex items-center space-x-3">
                       <div className={`p-2 rounded-lg ${
                         payment.type === 'income' ? 'bg-green-100' : 'bg-red-100'
@@ -586,8 +586,8 @@ export default function Dashboard() {
                         }
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-brand-gray-dark">{payment.name}</p>
-                        <p className="text-xs text-brand-gray">{payment.dueDate}</p>
+                        <p className="text-sm font-medium text-text-primary">{payment.name}</p>
+                        <p className="text-xs text-text-secondary">{payment.dueDate}</p>
                       </div>
                     </div>
                     <span className={`text-sm font-medium ${
@@ -601,10 +601,10 @@ export default function Dashboard() {
             </div>
 
             {/* Recent Transactions */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-brand-gray">
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-border-brand">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-brand-gray-dark">Recent Transactions</h3>
-                <button className="text-brand-teal hover:text-brand-teal/80 transition-colors">
+                <h3 className="text-lg font-semibold text-text-primary">Recent Transactions</h3>
+                <button className="text-primary hover:text-primary-dark transition-colors">
                   <FiEye size={20} />
                 </button>
               </div>
@@ -622,8 +622,8 @@ export default function Dashboard() {
                         }
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-brand-gray-dark">{transaction.description}</p>
-                        <p className="text-xs text-brand-gray">{transaction.date}</p>
+                        <p className="text-sm font-medium text-text-primary">{transaction.description}</p>
+                        <p className="text-xs text-text-secondary">{transaction.date}</p>
                       </div>
                     </div>
                     <span className={`text-sm font-medium ${
@@ -635,10 +635,10 @@ export default function Dashboard() {
                 ))}
               </div>
               
-              <div className="mt-4 pt-4 border-t border-brand-gray">
+              <div className="mt-4 pt-4 border-t border-border-brand">
                 <Link 
                   href="/dashboard/add-transaction"
-                  className="flex items-center justify-center space-x-2 text-brand-teal hover:text-brand-teal/80 transition-colors"
+                  className="flex items-center justify-center space-x-2 text-primary hover:text-primary-dark transition-colors"
                 >
                   <FiPlus size={16} />
                   <span className="text-sm font-medium">Add New Transaction</span>
