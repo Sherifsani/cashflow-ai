@@ -36,14 +36,14 @@ const Register = () => {
   const router = useRouter();
 
   return (
-    <div className="max-h-scr bg-gradient-to-br from-blue-50 via-white to-purple-50 flex">
+    <div className="max-h-scr grid grid-cols-2">
       <BrandingPanel currentStep={currentStep} />
 
-      <div className="flex-1 flex flex-col justify-center px-8 sm:px-12 lg:px-16 overflow-y-scro">
-        <div className="max-w-lg w-full mx-auto">
+      <div className="bg-[#F4F6F9] flex-1 flex flex-col justify-center px-8 sm:px-12 lg:px-16 overflow-y-scro">
+        <div className="bg-[#F4F6F9] max-w-lg w-full mx-auto">
           <FormHeader currentStep={currentStep} />
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="bg-[#F4F6F9] space-y-6">
             {errors.submit && (
               <Alert type="error">{errors.submit}</Alert>
             )}
