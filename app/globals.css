@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-/* Custom color variables for the brand */
 :root {
+  /* CashFlow Co-Pilot Brand Colors */
   --brand-teal: #00A878;
   --brand-teal-dark: #008f68;
   --brand-gray-dark: #2D3540;
@@ -9,9 +9,29 @@
   --brand-text-dark: #1F2937;
   --brand-text-medium: #6B7280;
   --brand-border: #D1D5DB;
+  --brand-testimonial: #374151;
 }
 
-/* Custom utility classes */
+@theme {
+  /* Map brand colors to Tailwind utilities */
+  --color-primary: var(--brand-teal);
+  --color-primary-dark: var(--brand-teal-dark);
+  --color-background-dark: var(--brand-gray-dark);
+  --color-background-light: var(--brand-gray-light);
+  --color-text-primary: var(--brand-text-dark);
+  --color-text-secondary: var(--brand-text-medium);
+  --color-border-brand: var(--brand-border);
+  --color-testimonial: var(--brand-testimonial);
+  
+  /* App-specific color aliases for existing components */
+  --color-app-bg-dark: var(--brand-gray-dark);
+  --color-app-bg-light: var(--brand-gray-light);
+  --color-app-text-primary: var(--brand-text-dark);
+  --color-app-text-secondary: var(--brand-text-medium);
+  --color-app-border: var(--brand-border);
+}
+
+/* Custom utility classes for backward compatibility */
 .bg-brand-teal { background-color: var(--brand-teal); }
 .bg-brand-teal-dark { background-color: var(--brand-teal-dark); }
 .bg-brand-gray-dark { background-color: var(--brand-gray-dark); }
@@ -25,7 +45,7 @@
 .border-brand-border { border-color: var(--brand-border); }
 .border-brand-teal { border-color: var(--brand-teal); }
 
-/* Focus states */
+/* Focus and hover states */
 .focus\:ring-brand-teal:focus {
   --tw-ring-color: var(--brand-teal);
   --tw-ring-opacity: 0.5;
