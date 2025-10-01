@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { JSX, useState } from 'react'
 import { 
   FiTrendingUp, 
   FiArrowRight,
@@ -18,9 +18,43 @@ import {
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-export default function BusinessSetup() {
-  const [currentStep, setCurrentStep] = useState(1)
-  const [businessData, setBusinessData] = useState({
+// Type definitions
+interface BusinessType {
+  id: string;
+  name: string;
+  icon: string;
+}
+
+interface Goal {
+  id: string;
+  name: string;
+  description: string;
+}
+
+interface BusinessData {
+  // Step 1: Business Info
+  businessName: string;
+  businessType: string;
+  location: string;
+  
+  // Step 2: Financial Info  
+  startingBalance: string;
+  monthlyRevenue: string;
+  monthlyExpenses: string;
+  
+  // Step 3: Goals
+  primaryGoal: string;
+  targetGrowth: string;
+  
+  // Step 4: Contact
+  phone: string;
+  whatsappAlerts: boolean;
+  emailReports: boolean;
+}
+
+export default function BusinessSetup(): JSX.Element {
+  const [currentStep, setCurrentStep] = useState<number>(1)
+  const [businessData, setBusinessData] = useState<BusinessData>({
     // Step 1: Business Info
     businessName: '',
     businessType: '',
@@ -42,7 +76,7 @@ export default function BusinessSetup() {
   })
   const router = useRouter()
 
-  const businessTypes = [
+  const businessTypes: BusinessType[] = [
     { id: 'restaurant', name: 'Restaurant/Food Service', icon: '🍽️' },
     { id: 'retail', name: 'Retail/Shop', icon: '🏪' },
     { id: 'services', name: 'Professional Services', icon: '💼' },
@@ -53,7 +87,7 @@ export default function BusinessSetup() {
     { id: 'other', name: 'Other', icon: '📋' }
   ]
 
-  const goals = [
+  const goals: Goal[] = [
     { id: 'grow', name: 'Grow my business', description: 'Expand operations and increase revenue' },
     { id: 'save', name: 'Save more money', description: 'Optimize expenses and build reserves' },
     { id: 'plan', name: 'Better financial planning', description: 'Forecast and budget effectively' },
@@ -61,26 +95,26 @@ export default function BusinessSetup() {
     { id: 'expand', name: 'Open new locations', description: 'Scale to multiple locations' }
   ]
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: keyof BusinessData, value: string | boolean): void => {
     setBusinessData(prev => ({
       ...prev,
       [field]: value
     }))
   }
 
-  const nextStep = () => {
+  const nextStep = (): void => {
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1)
     }
   }
 
-  const prevStep = () => {
+  const prevStep = (): void => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1)
     }
   }
 
-  const completeSetup = () => {
+  const completeSetup = (): void => {
     // Save business data to localStorage
     localStorage.setItem('businessSetup', JSON.stringify(businessData))
     localStorage.setItem('setupCompleted', 'true')
@@ -89,7 +123,7 @@ export default function BusinessSetup() {
     router.push('/dashboard')
   }
 
-  const getStepTitle = () => {
+  const getStepTitle = (): string => {
     switch (currentStep) {
       case 1: return 'Tell us about your business'
       case 2: return 'Your current financial situation'
@@ -99,19 +133,41 @@ export default function BusinessSetup() {
     }
   }
 
-  const isStepValid = () => {
+  const isStepValid = (): boolean => {
     switch (currentStep) {
       case 1: 
-        return businessData.businessName && businessData.businessType && businessData.location
+        return !!(businessData.businessName && businessData.businessType && businessData.location)
       case 2: 
-        return businessData.startingBalance && businessData.monthlyExpenses
+        return !!(businessData.startingBalance && businessData.monthlyExpenses)
       case 3: 
-        return businessData.primaryGoal
+        return !!businessData.primaryGoal
       case 4: 
-        return businessData.phone
+        return !!businessData.phone
       default: 
         return false
     }
+  }
+
+  const formatCurrency = (amount: string): string => {
+    if (!amount) return "X"
+    return parseFloat(amount).toLocaleString()
+  }
+
+  const calculateRunwayMonths = (): number => {
+    if (!businessData.startingBalance || !businessData.monthlyExpenses) return 0
+    return Math.floor(parseFloat(businessData.startingBalance) / parseFloat(businessData.monthlyExpenses))
+  }
+
+  const calculateProfitMargin = (): number => {
+    if (!businessData.monthlyRevenue || !businessData.monthlyExpenses) return 0
+    const revenue = parseFloat(businessData.monthlyRevenue)
+    const expenses = parseFloat(businessData.monthlyExpenses)
+    return ((revenue - expenses) / revenue * 100)
+  }
+
+  const calculateMonthlyProfit = (): number => {
+    if (!businessData.monthlyRevenue || !businessData.monthlyExpenses) return 0
+    return parseFloat(businessData.monthlyRevenue) - parseFloat(businessData.monthlyExpenses)
   }
 
   return (
@@ -156,7 +212,7 @@ export default function BusinessSetup() {
                   <input
                     type="text"
                     value={businessData.businessName}
-                    onChange={(e) => handleInputChange('businessName', e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('businessName', e.target.value)}
                     placeholder="e.g., Ada's Coffee Shop"
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -168,7 +224,7 @@ export default function BusinessSetup() {
                   Business Type *
                 </label>
                 <div className="grid grid-cols-2 gap-3">
-                  {businessTypes.map((type) => (
+                  {businessTypes.map((type: BusinessType) => (
                     <button
                       key={type.id}
                       onClick={() => handleInputChange('businessType', type.id)}
@@ -194,7 +250,7 @@ export default function BusinessSetup() {
                   <input
                     type="text"
                     value={businessData.location}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('location', e.target.value)}
                     placeholder="e.g., Lagos, Nigeria"
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -227,7 +283,7 @@ export default function BusinessSetup() {
                   <input
                     type="number"
                     value={businessData.startingBalance}
-                    onChange={(e) => handleInputChange('startingBalance', e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('startingBalance', e.target.value)}
                     placeholder="100,000"
                     className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -238,7 +294,7 @@ export default function BusinessSetup() {
               <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                 <h4 className="font-medium text-blue-900 mb-2">How will you use your starting capital?</h4>
                 <p className="text-sm text-blue-700 mb-3">
-                  Understanding how you plan to spend your ₦{businessData.startingBalance ? parseFloat(businessData.startingBalance).toLocaleString() : "X"} helps us track your cash runway.
+                  Understanding how you plan to spend your ₦{formatCurrency(businessData.startingBalance)} helps us track your cash runway.
                 </p>
               </div>
 
@@ -252,7 +308,7 @@ export default function BusinessSetup() {
                   <input
                     type="number"
                     value={businessData.monthlyExpenses}
-                    onChange={(e) => handleInputChange('monthlyExpenses', e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('monthlyExpenses', e.target.value)}
                     placeholder="50,000"
                     className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -269,7 +325,7 @@ export default function BusinessSetup() {
                   <input
                     type="number"
                     value={businessData.monthlyRevenue}
-                    onChange={(e) => handleInputChange('monthlyRevenue', e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('monthlyRevenue', e.target.value)}
                     placeholder="100,000"
                     className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -282,10 +338,10 @@ export default function BusinessSetup() {
                     <FiCheck className="h-5 w-5 text-green-600 mr-3" />
                     <div>
                       <h3 className="font-medium text-green-900">
-                        Cash Runway: {Math.floor(parseFloat(businessData.startingBalance) / parseFloat(businessData.monthlyExpenses))} months
+                        Cash Runway: {calculateRunwayMonths()} months
                       </h3>
                       <p className="text-sm text-green-700">
-                        Your ₦{parseFloat(businessData.startingBalance).toLocaleString()} can cover expenses for about {Math.floor(parseFloat(businessData.startingBalance) / parseFloat(businessData.monthlyExpenses))} months
+                        Your ₦{formatCurrency(businessData.startingBalance)} can cover expenses for about {calculateRunwayMonths()} months
                       </p>
                     </div>
                   </div>
@@ -298,10 +354,10 @@ export default function BusinessSetup() {
                     <FiCheck className="h-5 w-5 text-blue-600 mr-3" />
                     <div>
                       <h3 className="font-medium text-blue-900">
-                        Projected Monthly Profit: ₦{(parseFloat(businessData.monthlyRevenue) - parseFloat(businessData.monthlyExpenses)).toLocaleString()}
+                        Projected Monthly Profit: ₦{calculateMonthlyProfit().toLocaleString()}
                       </h3>
                       <p className="text-sm text-blue-700">
-                        {((parseFloat(businessData.monthlyRevenue) - parseFloat(businessData.monthlyExpenses)) / parseFloat(businessData.monthlyRevenue) * 100).toFixed(1)}% projected profit margin
+                        {calculateProfitMargin().toFixed(1)}% projected profit margin
                       </p>
                     </div>
                   </div>
@@ -318,7 +374,7 @@ export default function BusinessSetup() {
                   What's your primary business goal? *
                 </label>
                 <div className="space-y-3">
-                  {goals.map((goal) => (
+                  {goals.map((goal: Goal) => (
                     <button
                       key={goal.id}
                       onClick={() => handleInputChange('primaryGoal', goal.id)}
@@ -344,7 +400,7 @@ export default function BusinessSetup() {
                 </label>
                 <select
                   value={businessData.targetGrowth}
-                  onChange={(e) => handleInputChange('targetGrowth', e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('targetGrowth', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">Select target growth</option>
@@ -370,7 +426,7 @@ export default function BusinessSetup() {
                   <input
                     type="tel"
                     value={businessData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('phone', e.target.value)}
                     placeholder="+234 801 234 5678"
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -394,7 +450,7 @@ export default function BusinessSetup() {
                     <input
                       type="checkbox"
                       checked={businessData.whatsappAlerts}
-                      onChange={(e) => handleInputChange('whatsappAlerts', e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('whatsappAlerts', e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -415,7 +471,7 @@ export default function BusinessSetup() {
                     <input
                       type="checkbox"
                       checked={businessData.emailReports}
-                      onChange={(e) => handleInputChange('emailReports', e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('emailReports', e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
