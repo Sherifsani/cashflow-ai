@@ -54,7 +54,7 @@ export default function Step1Personal({ form, errors, onChange, showPassword, to
                 />
             </div>
 
-            <div>
+            {/* <div>
                 <TextInput
                     name="phone"
                     type="tel"
@@ -64,7 +64,7 @@ export default function Step1Personal({ form, errors, onChange, showPassword, to
                     error={errors.phone}
                     icon={<FiPhone className="size-5 text-inherit" />}
                 />
-            </div>
+            </div> */}
 
             <div>
                 <PasswordInput

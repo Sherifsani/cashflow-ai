@@ -1,4 +1,4 @@
-export type FormData = {
+export type FormDataType = {
   firstName: string;
   lastName: string;
   email: string;
@@ -14,4 +14,4 @@ export type FormData = {
   hearAboutUs: string;
 };
 
-export type Errors = Partial<Record<keyof FormData | 'submit', string>>;
+export type Errors = Partial<Record<keyof FormDataType | 'submit', string>>;

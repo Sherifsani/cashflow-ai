@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
-import { FormData, Errors } from './types';
+import { FormDataType, Errors } from './types';
 import { useRouter } from 'next/navigation';
 import { FiMail, FiLock, FiUser, FiPhone, FiBriefcase, FiMapPin, FiArrowLeft, FiCheck, FiArrowRight, FiTrendingUp } from "react-icons/fi";
 import BrandingPanel from './_components/BrandingPanel';
@@ -41,6 +41,9 @@ const Register = () => {
 
       <div className="bg-brand-gray-light flex-1 flex flex-col justify-center px-8 sm:px-12 lg:px-16 overflow-y-scro">
         <div className="bg-brand-gray-light max-w-lg w-full mx-auto">
+          {/* <button className="bg-amber-300 text-white p-3 rounded" onClick={handleSubmit}>
+            Register
+          </button> */}
           <FormHeader currentStep={currentStep} />
 
           <form onSubmit={handleSubmit} className="bg-brand-gray-light space-y-6">

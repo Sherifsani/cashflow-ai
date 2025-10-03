@@ -2,7 +2,8 @@
 
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FormData, Errors } from '../types';
+import { FormDataType, Errors } from '../types';
+import authService from '../../../../services/authService';
 
 export default function useRegisterForm() {
   const router = useRouter();
@@ -10,7 +11,7 @@ export default function useRegisterForm() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FormDataType>({
     firstName: "",
     lastName: "",
     email: "",
@@ -43,13 +44,13 @@ export default function useRegisterForm() {
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = e.target as HTMLInputElement;
-    const name = target.name as keyof FormData;
+    const name = target.name as keyof FormDataType;
     const value = target.type === 'checkbox' ? String((target as HTMLInputElement).checked) : target.value;
 
     setFormData(prev => ({
       ...prev,
       [name]: value,
-    } as Pick<FormData, keyof FormData>));
+    } as Pick<FormDataType, keyof FormDataType>));
 
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
@@ -92,23 +93,54 @@ export default function useRegisterForm() {
   const toggleShowPassword = useCallback(() => setShowPassword(prev => !prev), []);
   const toggleShowConfirmPassword = useCallback(() => setShowConfirmPassword(prev => !prev), []);
 
-  const handleSubmit = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!validateStep(3)) return;
+  // const handleSubmit = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   if (!validateStep(3)) return;
+  //   setLoading(true);
+  //   try {
+  //     await new Promise(resolve => setTimeout(resolve, 2000));
+  //     localStorage.setItem("token", "demo_token_" + Date.now());
+  //     localStorage.setItem("userEmail", formData.email);
+  //     localStorage.setItem("businessName", formData.businessName);
+  //     localStorage.setItem("isNewUser", "true");
+  //     router.push("/setup");
+  //   } catch (err) {
+  //     setErrors({ submit: "Registration failed. Please try again." });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [formData, router, validateStep]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    console.log('submitted')
+    const formData = new FormData(e.target as HTMLFormElement);
+    const { email, password, firstName, lastName } = Object.fromEntries(formData) as { email: string, password: string, firstName: string, lastName: string };
+    console.log(email, password, firstName, lastName);
+    // return;
     setLoading(true);
+
+    const SignUpData = {
+      // email: 'john@doe.com',
+      // password: 'johnDoePass',
+      // firstName: 'john',
+      // lastName: 'doe',
+      email: 'olani@gmail.com',
+      password: 'Enny@CC.Secret001',
+      firstName: 'Eniolaaaa',
+      lastName: 'Olaniyannnntooo',
+    }
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      localStorage.setItem("token", "demo_token_" + Date.now());
-      localStorage.setItem("userEmail", formData.email);
-      localStorage.setItem("businessName", formData.businessName);
-      localStorage.setItem("isNewUser", "true");
-      router.push("/setup");
+      await authService.signUp(SignUpData);
+      // Redirect to dashboard
+      // window.location.href = '/dashboard';
     } catch (err) {
-      setErrors({ submit: "Registration failed. Please try again." });
+      console.error(err)
+      throw new Error
     } finally {
       setLoading(false);
     }
-  }, [formData, router, validateStep]);
+  }
 
   return {
     formData,

@@ -20,13 +20,13 @@ export default function FormNavigation({ currentStep, loading, onPrev, onNext }:
         </button>
       )}
 
-      {currentStep < 3 ? (
+      {/* {currentStep < 3 ? (
         <button type="button" onClick={onNext} className="bg-primary w-full flex justify-center items-center ml-auto text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-hover hover:shadow-lg transform hover:scale-105 transition-all">
           Continue
           <FiArrowRight className="h-4 w-4 ml-2" />
         </button>
-      ) : (
-        <button type="submit" disabled={loading} className="bg-primary w-full flex justify-center items-center ml-auto text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-hover hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
+      ) : ( */}
+        <button disabled={loading} className="bg-primary w-full flex justify-center items-center ml-auto text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-hover hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
           {loading ? (
             <>
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -39,7 +39,7 @@ export default function FormNavigation({ currentStep, loading, onPrev, onNext }:
             </>
           )}
         </button>
-      )}
+      {/* )} */}
     </div>
   );
 }
