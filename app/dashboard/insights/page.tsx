@@ -4,11 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FiArrowLeft, FiTrendingUp, FiTrendingDown, FiDollarSign, FiCalendar } from 'react-icons/fi';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { getTransactionsByPeriod } from '../../../lib/api';
+import { getAnalytics } from '../../../lib/api';
 
 type Period = '7d' | '30d' | '90d' | '1y';
 
-interface TransactionData {
+interface AnalyticsData {
   period: string;
   dateRange: {
     from: string;
@@ -20,19 +20,31 @@ interface TransactionData {
     netAmount: number;
     transactionCount: number;
   };
-  transactions: Array<{
-    transactionId: string;
-    amount: number;
-    description: string;
-    type: 'income' | 'expense';
+  chartData: Array<{
     date: string;
+    income: number;
+    expense: number;
+    net: number;
+    cumulativeBalance: number;
   }>;
+  categoryBreakdown: {
+    income: Array<{
+      category: string;
+      amount: number;
+      percentage: number;
+    }>;
+    expense: Array<{
+      category: string;
+      amount: number;
+      percentage: number;
+    }>;
+  };
 }
 
 export default function InsightsPage() {
   const router = useRouter();
   const [selectedPeriod, setSelectedPeriod] = useState<Period>('30d');
-  const [data, setData] = useState<TransactionData | null>(null);
+  const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,7 +59,7 @@ export default function InsightsPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await getTransactionsByPeriod(period);
+      const response = await getAnalytics(period);
       setData(response);
     } catch (err: any) {
       console.error('Failed to fetch insights:', err);
@@ -70,27 +82,8 @@ export default function InsightsPage() {
     }).format(amount);
   };
 
-  // Prepare chart data
-  const chartData = data?.transactions.reduce((acc: any[], transaction) => {
-    const date = new Date(transaction.date).toLocaleDateString();
-    const existing = acc.find(item => item.date === date);
-    
-    if (existing) {
-      if (transaction.type === 'income') {
-        existing.income += transaction.amount;
-      } else {
-        existing.expense += transaction.amount;
-      }
-    } else {
-      acc.push({
-        date,
-        income: transaction.type === 'income' ? transaction.amount : 0,
-        expense: transaction.type === 'expense' ? transaction.amount : 0,
-      });
-    }
-    
-    return acc;
-  }, []) || [];
+  // Chart data is now directly available from the API
+  const chartData = data?.chartData || [];
 
   return (
     <div className="min-h-screen bg-brand-gray-light">
@@ -215,7 +208,7 @@ export default function InsightsPage() {
 
             {/* Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              {/* Line Chart */}
+              {/* Line Chart - Income vs Expenses */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h3 className="text-lg font-semibold text-brand-text-dark mb-4">Income vs Expenses Trend</h3>
                 <ResponsiveContainer width="100%" height={300}>
@@ -226,65 +219,134 @@ export default function InsightsPage() {
                     <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                     <Line type="monotone" dataKey="income" stroke="#10B981" strokeWidth={2} />
                     <Line type="monotone" dataKey="expense" stroke="#EF4444" strokeWidth={2} />
+                    <Line type="monotone" dataKey="net" stroke="#3B82F6" strokeWidth={2} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
 
-              {/* Bar Chart */}
+              {/* Bar Chart - Cumulative Balance */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-brand-text-dark mb-4">Daily Comparison</h3>
+                <h3 className="text-lg font-semibold text-brand-text-dark mb-4">Cumulative Balance</h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                    <Bar dataKey="income" fill="#10B981" />
-                    <Bar dataKey="expense" fill="#EF4444" />
+                    <Bar dataKey="cumulativeBalance" fill="#8B5CF6" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
-            {/* Recent Transactions */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-brand-text-dark mb-4">
-                Recent Transactions ({data.period})
-              </h3>
-              
-              {data.transactions.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-brand-text-medium">No transactions found for this period</p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {data.transactions.slice(0, 10).map((transaction) => (
-                    <div key={transaction.transactionId} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg">
-                      <div className="flex items-center">
-                        <div className={`p-2 rounded-lg mr-4 ${
-                          transaction.type === 'income' ? 'bg-green-100' : 'bg-red-100'
-                        }`}>
-                          {transaction.type === 'income' ? 
-                            <FiTrendingUp className="h-4 w-4 text-green-600" /> : 
-                            <FiTrendingDown className="h-4 w-4 text-red-600" />
-                          }
+            {/* Category Breakdown */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              {/* Income Categories */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-brand-text-dark mb-4">Income by Category</h3>
+                {data.categoryBreakdown.income.length === 0 ? (
+                  <p className="text-brand-text-medium text-center py-8">No income categories found</p>
+                ) : (
+                  <div className="space-y-4">
+                    {data.categoryBreakdown.income.map((category, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <div className="w-4 h-4 bg-green-500 rounded mr-3"></div>
+                          <span className="text-brand-text-dark">{category.category}</span>
                         </div>
-                        <div>
-                          <p className="font-medium text-brand-text-dark">{transaction.description}</p>
-                          <p className="text-sm text-brand-text-medium">
-                            {new Date(transaction.date).toLocaleDateString()}
-                          </p>
+                        <div className="text-right">
+                          <p className="font-semibold text-brand-text-dark">{formatCurrency(category.amount)}</p>
+                          <p className="text-sm text-brand-text-medium">{category.percentage}%</p>
                         </div>
                       </div>
-                      <p className={`font-semibold ${
-                        transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount)}
-                      </p>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Expense Categories */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-brand-text-dark mb-4">Expenses by Category</h3>
+                {data.categoryBreakdown.expense.length === 0 ? (
+                  <p className="text-brand-text-medium text-center py-8">No expense categories found</p>
+                ) : (
+                  <div className="space-y-4">
+                    {data.categoryBreakdown.expense.map((category, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <div className="w-4 h-4 bg-red-500 rounded mr-3"></div>
+                          <span className="text-brand-text-dark">{category.category}</span>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-brand-text-dark">{formatCurrency(category.amount)}</p>
+                          <p className="text-sm text-brand-text-medium">{category.percentage}%</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Period Summary */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-brand-text-dark mb-4">
+                Period Summary ({data.period})
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <span className="text-brand-text-medium">Date Range:</span>
+                    <span className="font-medium text-brand-text-dark">
+                      {new Date(data.dateRange.from).toLocaleDateString()} - {new Date(data.dateRange.to).toLocaleDateString()}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                    <span className="text-brand-text-medium">Total Income:</span>
+                    <span className="font-semibold text-green-600">
+                      {formatCurrency(data.summary.totalIncome)}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
+                    <span className="text-brand-text-medium">Total Expenses:</span>
+                    <span className="font-semibold text-red-600">
+                      {formatCurrency(data.summary.totalExpenses)}
+                    </span>
+                  </div>
                 </div>
-              )}
+                
+                <div className="space-y-4">
+                  <div className={`flex justify-between items-center p-3 rounded-lg ${
+                    data.summary.netAmount >= 0 ? 'bg-green-50' : 'bg-red-50'
+                  }`}>
+                    <span className="text-brand-text-medium">Net Amount:</span>
+                    <span className={`font-semibold ${
+                      data.summary.netAmount >= 0 ? 'text-green-600' : 'text-red-600'
+                    }`}>
+                      {formatCurrency(data.summary.netAmount)}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                    <span className="text-brand-text-medium">Total Transactions:</span>
+                    <span className="font-semibold text-blue-600">
+                      {data.summary.transactionCount}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
+                    <span className="text-brand-text-medium">Average per Transaction:</span>
+                    <span className="font-semibold text-purple-600">
+                      {formatCurrency(data.summary.transactionCount > 0 ? 
+                        Math.abs(data.summary.totalIncome + data.summary.totalExpenses) / data.summary.transactionCount : 0
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </>
         )}

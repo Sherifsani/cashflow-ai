@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FiArrowLeft, FiUpload, FiFile, FiCheck, FiX } from 'react-icons/fi';
 import { getPresignedUploadUrl, confirmFileUpload, getUserFiles } from '../../../lib/api';
@@ -16,8 +16,22 @@ interface UploadedFile {
 export default function FileUploadPage() {
   const router = useRouter();
   const [files, setFiles] = useState<UploadedFile[]>([]);
+  const [userFiles, setUserFiles] = useState<any[]>([]);
   const [dragActive, setDragActive] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    loadUserFiles();
+  }, []);
+
+  const loadUserFiles = async () => {
+    try {
+      const files = await getUserFiles();
+      setUserFiles(files);
+    } catch (error) {
+      console.error('Failed to load user files:', error);
+    }
+  };
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -49,11 +63,11 @@ export default function FileUploadPage() {
     setLoading(true);
     
     for (const file of fileList) {
-      const fileId = crypto.randomUUID();
+      const tempFileId = crypto.randomUUID();
       
       // Add file to state with uploading status
       setFiles(prev => [...prev, {
-        fileId,
+        fileId: tempFileId,
         originalName: file.name,
         fileSize: file.size,
         status: 'uploading',
@@ -62,10 +76,15 @@ export default function FileUploadPage() {
 
       try {
         // Get presigned URL
-        const { data } = await getPresignedUploadUrl(file.name);
+        console.log('Getting presigned URL for:', file.name);
+        const response = await getPresignedUploadUrl(file.name);
+        console.log('Presigned URL response:', response);
+        
+        const { uploadUrl, fileId } = response.data;
         
         // Upload to S3
-        const uploadResponse = await fetch(data.uploadUrl, {
+        console.log('Uploading to S3:', uploadUrl);
+        const uploadResponse = await fetch(uploadUrl, {
           method: 'PUT',
           body: file,
           headers: {
@@ -73,23 +92,31 @@ export default function FileUploadPage() {
           }
         });
 
+        console.log('S3 upload response:', uploadResponse.status, uploadResponse.statusText);
+
         if (uploadResponse.ok) {
           // Confirm upload
-          await confirmFileUpload(data.fileId, file.size);
+          console.log('Confirming upload for fileId:', fileId);
+          await confirmFileUpload(fileId, file.size);
           
-          // Update file status
+          // Update file status using tempFileId
           setFiles(prev => prev.map(f => 
-            f.fileId === fileId 
+            f.fileId === tempFileId 
               ? { ...f, status: 'uploaded' as const, progress: 100 }
               : f
           ));
+
+          // Reload user files
+          await loadUserFiles();
         } else {
-          throw new Error('Upload failed');
+          const errorText = await uploadResponse.text();
+          console.error('S3 upload failed:', errorText);
+          throw new Error(`S3 upload failed: ${uploadResponse.status}`);
         }
       } catch (error) {
-        console.error('Upload error:', error);
+        console.error('Upload error for', file.name, ':', error);
         setFiles(prev => prev.map(f => 
-          f.fileId === fileId 
+          f.fileId === tempFileId 
             ? { ...f, status: 'error' as const }
             : f
         ));
@@ -162,6 +189,35 @@ export default function FileUploadPage() {
             </label>
           </div>
         </div>
+
+        {/* Previously Uploaded Files */}
+        {userFiles.length > 0 && (
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <h3 className="text-lg font-semibold text-brand-text-dark mb-4">
+              Your Files ({userFiles.length})
+            </h3>
+            <div className="space-y-3">
+              {userFiles.map((file) => (
+                <div key={file.fileId} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center">
+                    <FiFile className="h-5 w-5 text-brand-text-medium mr-3" />
+                    <div>
+                      <p className="font-medium text-brand-text-dark">{file.originalName}</p>
+                      <p className="text-sm text-brand-text-medium">
+                        {formatFileSize(file.fileSize)} • {new Date(file.uploadedAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center text-green-600">
+                    <FiCheck className="h-4 w-4 mr-2" />
+                    Uploaded
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* File List */}
         {files.length > 0 && (

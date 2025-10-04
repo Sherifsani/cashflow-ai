@@ -62,6 +62,10 @@ export const getAllTransactions = () => apiRequest('/api/transactions');
 export const getTransactionsByPeriod = (period: '7d' | '30d' | '90d' | '1y') =>
   apiRequest(`/api/transactions/period/${period}`);
 
+// Analytics
+export const getAnalytics = (period: '7d' | '30d' | '90d' | '1y') =>
+  apiRequest(`/api/analytics/${period}`);
+
 export const deleteTransaction = (transactionId: string) =>
   apiRequest(`/api/transactions/${transactionId}`, { method: 'DELETE' });
 

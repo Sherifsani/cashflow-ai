@@ -460,7 +460,61 @@ Authorization: Bearer <token>
 
 ---
 
-## 🧪 Test Endpoint
+## 📊 Analytics Endpoint
+
+### 17. Get Analytics Data
+```http
+GET /api/analytics/:period
+Authorization: Bearer <token>
+```
+
+**Available Periods:** `7d`, `30d`, `90d`, `1y`
+
+**Response:**
+```json
+{
+  "period": "30d",
+  "dateRange": {
+    "from": "2024-09-04T08:00:48.213Z",
+    "to": "2024-10-04T08:00:48.213Z"
+  },
+  "summary": {
+    "totalIncome": 150000,
+    "totalExpenses": 85000,
+    "netAmount": 65000,
+    "transactionCount": 24
+  },
+  "chartData": [
+    {
+      "date": "2024-09-04",
+      "income": 25000,
+      "expense": 8000,
+      "net": 17000,
+      "cumulativeBalance": 67000
+    },
+    {
+      "date": "2024-09-05", 
+      "income": 0,
+      "expense": 12000,
+      "net": -12000,
+      "cumulativeBalance": 55000
+    }
+  ],
+  "categoryBreakdown": {
+    "income": [
+      { "category": "Sales Revenue", "amount": 120000, "percentage": 80 },
+      { "category": "Consulting", "amount": 30000, "percentage": 20 }
+    ],
+    "expense": [
+      { "category": "Office Supplies", "amount": 35000, "percentage": 41 },
+      { "category": "Marketing", "amount": 25000, "percentage": 29 },
+      { "category": "Utilities", "amount": 25000, "percentage": 30 }
+    ]
+  }
+}
+```
+
+---
 
 ### 16. Protected Test Endpoint
 ```http
@@ -563,6 +617,7 @@ Content-Type: application/json
 - [ ] Get transactions by period (7d, 30d, 90d, 1y)
 - [ ] Delete transaction
 - [ ] Get dashboard data
+- [ ] Get analytics data (7d, 30d, 90d, 1y)
 - [ ] File upload flow
 - [ ] Error handling for invalid requests
 

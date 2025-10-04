@@ -8,6 +8,8 @@ import {
   FiBarChart, 
   FiAlertTriangle,
   FiCheckCircle,
+  FiZap,
+  FiTarget,
   FiUpload,
   FiMessageCircle,
   FiSettings,
@@ -241,7 +243,7 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Link href="/dashboard/add-transaction" className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center">
               <div className="bg-brand-teal p-3 rounded-lg mr-4">
@@ -250,6 +252,18 @@ export default function Dashboard() {
               <div>
                 <h3 className="font-semibold text-brand-text-dark">Add Transaction</h3>
                 <p className="text-brand-text-medium text-sm">Record income or expense</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/dashboard/insights" className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-center">
+              <div className="bg-purple-500 p-3 rounded-lg mr-4">
+                <FiBarChart className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text-dark">Financial Insights</h3>
+                <p className="text-brand-text-medium text-sm">View trends and analytics</p>
               </div>
             </div>
           </Link>
@@ -277,6 +291,53 @@ export default function Dashboard() {
               </div>
             </div>
           </Link>
+        </div>
+
+        {/* AI Insights Preview */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-brand-text-dark flex items-center">
+              <div className="bg-purple-100 p-2 rounded-lg mr-3">
+                <FiZap className="h-5 w-5 text-purple-600" />
+              </div>
+              AI Insights
+            </h3>
+            <Link href="/dashboard/insights" className="text-brand-teal hover:text-brand-teal-dark text-sm font-medium">
+              View All
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div className="flex items-start">
+                <FiAlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-yellow-800">Cash Flow Alert</p>
+                  <p className="text-sm text-yellow-700 mt-1">Your expenses increased 15% this month. Consider reviewing marketing spend.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-start">
+                <FiCheckCircle className="h-5 w-5 text-green-600 mt-0.5 mr-3 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-green-800">Good News</p>
+                  <p className="text-sm text-green-700 mt-1">Payment collection improved by 12% compared to last month.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-start">
+                <FiTarget className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-blue-800">Recommendation</p>
+                  <p className="text-sm text-blue-700 mt-1">Set aside ₦80,000 for Q1 taxes based on your cash flow pattern.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Recent Transactions */}

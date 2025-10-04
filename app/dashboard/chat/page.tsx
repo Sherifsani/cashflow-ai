@@ -94,10 +94,11 @@ export default function AIChat() {
   }, [messages])
 
   const checkAuth = (): void => {
-    const userData = localStorage.getItem('user')
+    const token = localStorage.getItem('idToken') || localStorage.getItem('accessToken')
     
-    if (userData) {
-      setUser(JSON.parse(userData))
+    if (token) {
+      // Set a basic user object since we have a valid token
+      setUser({ email: 'authenticated-user' })
     } else {
       router.push('/auth/login')
       return
