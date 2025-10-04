@@ -22,6 +22,9 @@ export default function useRegisterForm() {
     businessLocation: "",
     monthlyRevenue: "",
     employeeCount: "",
+    startingBalance: "",
+    expectedMonthlyExpense: "",
+    financialGoals: "",
     alertPreference: "whatsapp",
     hearAboutUs: ""
   });
@@ -79,6 +82,11 @@ export default function useRegisterForm() {
       if (!formData.employeeCount) newErrors.employeeCount = "Please select employee count";
     }
 
+    if (step === 3) {
+      if (!formData.startingBalance) newErrors.startingBalance = "Starting balance is required";
+      if (!formData.financialGoals) newErrors.financialGoals = "Please select a financial goal";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [formData]);
@@ -96,15 +104,33 @@ export default function useRegisterForm() {
     event.preventDefault();
     if (!validateStep(3)) return;
     setLoading(true);
+    
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      localStorage.setItem("token", "demo_token_" + Date.now());
-      localStorage.setItem("userEmail", formData.email);
-      localStorage.setItem("businessName", formData.businessName);
-      localStorage.setItem("isNewUser", "true");
-      router.push("/setup");
-    } catch (err) {
-      setErrors({ submit: "Registration failed. Please try again." });
+      const { signUp } = await import('../../../../lib/cognito');
+      
+      const response = await signUp(formData.email, formData.password, {
+        email: formData.email,
+        given_name: formData.firstName,
+        family_name: formData.lastName,
+        phone_number: formData.phone,
+      });
+
+      console.log('User registration successful:', response);
+      
+      // Store registration data temporarily
+      sessionStorage.setItem('pendingUser', JSON.stringify({
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        businessName: formData.businessName,
+        registeredAt: new Date().toISOString()
+      }));
+      
+      // Redirect to verification page with email
+      router.push(`/auth/verification?email=${encodeURIComponent(formData.email)}`);
+    } catch (err: any) {
+      console.error('Registration error:', err);
+      setErrors({ submit: err.message || "Registration failed. Please try again." });
     } finally {
       setLoading(false);
     }

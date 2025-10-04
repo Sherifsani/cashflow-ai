@@ -43,7 +43,7 @@ const Register = () => {
         <div className="bg-brand-gray-light max-w-lg w-full mx-auto">
           <FormHeader currentStep={currentStep} />
 
-          <form onSubmit={handleSubmit} className="bg-brand-gray-light space-y-6">
+          <form className="bg-brand-gray-light space-y-6">
             {errors.submit && (
               <Alert type="error">{errors.submit}</Alert>
             )}
@@ -79,7 +79,13 @@ const Register = () => {
               />
             )}
 
-            <FormNavigation currentStep={currentStep} loading={loading} onPrev={handlePrevStep} onNext={handleNextStep} />
+            <FormNavigation 
+              currentStep={currentStep} 
+              loading={loading} 
+              onPrev={handlePrevStep} 
+              onNext={handleNextStep}
+              onSubmit={handleSubmit}
+            />
           </form>
 
           <AuthFooter />

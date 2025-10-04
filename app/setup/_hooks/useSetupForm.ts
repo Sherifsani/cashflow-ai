@@ -91,14 +91,51 @@ export default function useSetupForm(): SetupFormHook {
     }
   }, [currentStep])
 
-  const completeSetup = useCallback((): void => {
-    // Save business data to localStorage
-    localStorage.setItem('businessSetup', JSON.stringify(businessData))
-    localStorage.setItem('setupCompleted', 'true')
-    
-    // Redirect to dashboard
-    router.push('/dashboard')
-  }, [businessData, router])
+  const completeSetup = useCallback(async (): Promise<void> => {
+    try {
+      const { createUserProfile } = await import('../../../lib/api');
+      
+      // Get user info from localStorage
+      const userEmail = localStorage.getItem('userEmail');
+      
+      if (!userEmail) {
+        throw new Error('User email not found');
+      }
+
+      // Create user profile via API
+      const profileData = {
+        userId: crypto.randomUUID(), // Generate UUID for user
+        email: userEmail,
+        firstName: '', // Will be updated later
+        lastName: '',
+        phoneNumber: businessData.phone,
+        businessName: businessData.businessName,
+        businessType: businessData.businessType,
+        businessLocation: businessData.location,
+        monthlyRevenue: parseFloat(businessData.monthlyRevenue || '0'),
+        teamSize: 1, // Default
+        startingBalance: parseFloat(businessData.startingBalance || '0'),
+        expectedMonthlyExpense: parseFloat(businessData.monthlyExpenses || '0'),
+        expectedMonthlyIncome: parseFloat(businessData.monthlyRevenue || '0'),
+        financialGoals: [businessData.goal],
+        notificationPreference: businessData.emailReports ? 'email' : 'none'
+      };
+
+      await createUserProfile(profileData);
+      
+      // Store setup completion
+      localStorage.setItem('businessSetup', JSON.stringify(businessData));
+      localStorage.setItem('setupCompleted', 'true');
+      
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Setup completion error:', error);
+      // Fallback - save locally and continue
+      localStorage.setItem('businessSetup', JSON.stringify(businessData));
+      localStorage.setItem('setupCompleted', 'true');
+      router.push('/dashboard');
+    }
+  }, [businessData, router]);
 
   const getStepTitle = useCallback((): string => {
     switch (currentStep) {

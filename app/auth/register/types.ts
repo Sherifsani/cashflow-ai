@@ -10,6 +10,9 @@ export type FormData = {
   businessLocation: string;
   monthlyRevenue: string;
   employeeCount: string;
+  startingBalance: string;
+  expectedMonthlyExpense: string;
+  financialGoals: string;
   alertPreference: string;
   hearAboutUs: string;
 };

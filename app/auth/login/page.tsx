@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FiTrendingUp, FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiCheck, FiShield } from "react-icons/fi";
 
 interface FormData {
@@ -17,6 +17,7 @@ interface Errors {
 
 const Login = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
@@ -24,6 +25,9 @@ const Login = () => {
     password: ""
   });
   const [errors, setErrors] = useState<Errors>({});
+
+  // Check for verification success
+  const isVerified = searchParams.get('verified') === 'true';
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -67,22 +71,71 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // Simulate API call for demo
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const { signIn } = await import('../../../lib/cognito');
       
-      // For demo purposes, accept any valid email/password
-      if (formData.email && formData.password.length >= 6) {
-        // Store demo token
-        localStorage.setItem("token", "demo_token_" + Date.now());
+      const response = await signIn(formData.email, formData.password);
+      
+      if (response.AuthenticationResult?.AccessToken) {
+        // Store tokens
+        localStorage.setItem("accessToken", response.AuthenticationResult.AccessToken);
+        localStorage.setItem("idToken", response.AuthenticationResult.IdToken || "");
+        localStorage.setItem("refreshToken", response.AuthenticationResult.RefreshToken || "");
         localStorage.setItem("userEmail", formData.email);
         
-        // Success - redirect to dashboard
+        // Check if user needs profile creation
+        const needsProfileCreation = localStorage.getItem("pendingProfileCreation");
+        
+        if (needsProfileCreation) {
+          try {
+            const { createUserProfile } = await import('../../../lib/api');
+            
+            // Get stored registration data
+            const pendingUser = localStorage.getItem("pendingUser") || sessionStorage.getItem("pendingUser");
+            
+            if (pendingUser) {
+              const userData = JSON.parse(pendingUser);
+              
+              await createUserProfile({
+                userId: crypto.randomUUID(),
+                email: formData.email,
+                firstName: userData.firstName || "",
+                lastName: userData.lastName || "",
+                phoneNumber: userData.phone || "",
+                businessName: userData.businessName || "",
+                businessType: userData.businessType || "General",
+                businessLocation: userData.businessLocation || "",
+                monthlyRevenue: parseFloat(userData.monthlyRevenue || "0"),
+                teamSize: userData.employeeCount === "Just me" ? 1 : 
+                         userData.employeeCount === "2-5 employees" ? 3 :
+                         userData.employeeCount === "6-10 employees" ? 8 :
+                         userData.employeeCount === "11-25 employees" ? 18 :
+                         userData.employeeCount === "26-50 employees" ? 38 : 50,
+                startingBalance: parseFloat(userData.startingBalance || "0"),
+                expectedMonthlyExpense: parseFloat(userData.expectedMonthlyExpense || "0"),
+                expectedMonthlyIncome: parseFloat(userData.monthlyRevenue || "0"),
+                financialGoals: userData.financialGoals ? [userData.financialGoals] : [],
+                notificationPreference: userData.alertPreference === "whatsapp" ? "both" : "email"
+              });
+              
+              // Clean up stored data
+              localStorage.removeItem("pendingUser");
+              sessionStorage.removeItem("pendingUser");
+            }
+            
+            localStorage.removeItem("pendingProfileCreation");
+            localStorage.setItem("profileCreated", "true");
+          } catch (error) {
+            console.error('Profile creation error:', error);
+          }
+        }
+        
         router.push("/dashboard");
       } else {
-        throw new Error("Invalid credentials. Please try again.");
+        throw new Error("Authentication failed");
       }
-    } catch (err) {
-      setErrors({ submit: (err as Error).message });
+    } catch (err: any) {
+      console.error('Login error:', err);
+      setErrors({ submit: err.message || "Invalid credentials. Please try again." });
     } finally {
       setLoading(false);
     }
@@ -186,6 +239,14 @@ const Login = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Verification Success Message */}
+            {isVerified && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm flex items-center">
+                <FiCheck className="h-5 w-5 mr-2" />
+                Email verified successfully! You can now sign in.
+              </div>
+            )}
+
             {errors.submit && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                 {errors.submit}

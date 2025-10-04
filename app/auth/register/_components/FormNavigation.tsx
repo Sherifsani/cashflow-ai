@@ -8,9 +8,10 @@ type Props = {
   loading: boolean;
   onPrev: () => void;
   onNext: () => void;
+  onSubmit: (e: React.FormEvent) => void;
 };
 
-export default function FormNavigation({ currentStep, loading, onPrev, onNext }: Props) {
+export default function FormNavigation({ currentStep, loading, onPrev, onNext, onSubmit }: Props) {
   return (
     <div className="flex justify-between pt-6">
       {currentStep > 1 && (
@@ -26,7 +27,7 @@ export default function FormNavigation({ currentStep, loading, onPrev, onNext }:
           <FiArrowRight className="h-4 w-4 ml-2" />
         </button>
       ) : (
-        <button type="submit" disabled={loading} className="bg-primary w-full flex justify-center items-center ml-auto text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-hover hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
+        <button type="button" onClick={onSubmit} disabled={loading} className="bg-primary w-full flex justify-center items-center ml-auto text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-hover hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
           {loading ? (
             <>
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
