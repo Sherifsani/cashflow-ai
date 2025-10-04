@@ -20,6 +20,7 @@ import {
 } from 'react-icons/fi'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { sendChatMessage } from '../../../lib/api'
 
 // Types
 interface User {
@@ -107,8 +108,16 @@ export default function AIChat() {
     setLoading(false)
   }
 
+  const getUserId = (): string => {
+    return localStorage.getItem('userEmail') || 'anonymous';
+  };
+
+  const getChatHistoryKey = (): string => {
+    return `chatHistory_${getUserId()}`;
+  };
+
   const loadChatHistory = (): void => {
-    const savedMessages = localStorage.getItem('chatHistory')
+    const savedMessages = localStorage.getItem(getChatHistoryKey())
     if (savedMessages) {
       const parsedMessages = JSON.parse(savedMessages)
       setMessages(parsedMessages.map((msg: any) => ({
@@ -119,7 +128,7 @@ export default function AIChat() {
       // Add welcome message
       const welcomeMessage: Message = {
         id: Date.now().toString(),
-        content: "👋 Hello! I'm your AI Financial Assistant. I'm here to help you understand your cash flow, identify opportunities, and provide personalized financial insights for your business. What would you like to know?",
+        content: "👋 Hello! I'm your AI Financial Assistant powered by advanced AI. I can analyze your actual financial data to provide personalized insights about your cash flow, spending patterns, and growth opportunities. What would you like to know?",
         sender: 'ai',
         timestamp: new Date()
       }
@@ -128,7 +137,7 @@ export default function AIChat() {
   }
 
   const saveChatHistory = (newMessages: Message[]): void => {
-    localStorage.setItem('chatHistory', JSON.stringify(newMessages))
+    localStorage.setItem(getChatHistoryKey(), JSON.stringify(newMessages))
   }
 
   const scrollToBottom = (): void => {
@@ -136,126 +145,16 @@ export default function AIChat() {
   }
 
   const simulateAIResponse = async (userMessage: string): Promise<string> => {
-    // Simulate AI thinking time
-    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000))
-
-    // Mock AI responses based on keywords
-    const lowerMessage = userMessage.toLowerCase()
-
-    if (lowerMessage.includes('cash flow') || lowerMessage.includes('status')) {
-      return `Based on your current data, your cash flow looks healthy! 📊
-
-**Current Overview:**
-• Monthly Income: ₦450,000
-• Monthly Expenses: ₦320,000
-• Net Cash Flow: +₦130,000
-• Cash Runway: 22 months
-
-**Key Insights:**
-✅ Your income exceeds expenses by 40%
-⚠️ Marketing expenses increased 15% this month
-💡 Consider setting aside ₦50,000 monthly for emergency fund
-
-Would you like me to dive deeper into any specific area?`
+    try {
+      console.log('Sending message to API:', userMessage);
+      const response = await sendChatMessage(userMessage);
+      console.log('API response:', response);
+      return response.message || response.data?.message || 'I received your message but had trouble generating a response.';
+    } catch (error) {
+      console.error('Chat API error:', error);
+      throw new Error('Failed to get AI response. Please try again.');
     }
-
-    if (lowerMessage.includes('profitability') || lowerMessage.includes('profit')) {
-      return `Great question! Here are some strategies to boost your profitability: 💰
-
-**Revenue Growth:**
-• Focus on your top 20% customers (80/20 rule)
-• Increase prices by 5-10% for new customers
-• Develop recurring revenue streams
-
-**Cost Optimization:**
-• Review your marketing ROI - cut underperforming channels
-• Negotiate better rates with suppliers
-• Automate repetitive tasks to reduce labor costs
-
-**Cash Flow Management:**
-• Offer early payment discounts (2% for 10 days)
-• Implement stricter payment terms
-• Use invoice factoring for immediate cash
-
-Which area would you like to explore first?`
-    }
-
-    if (lowerMessage.includes('expense') || lowerMessage.includes('spending')) {
-      return `Here's your expense breakdown analysis: 📋
-
-**Top Expense Categories (This Month):**
-1. 🏢 Office Rent: ₦120,000 (37.5%)
-2. 👥 Staff Salaries: ₦85,000 (26.6%)
-3. 📢 Marketing: ₦45,000 (14.1%) ↑15%
-4. 🔧 Equipment: ₦30,000 (9.4%)
-5. 💻 Software: ₦25,000 (7.8%)
-6. ⚡ Utilities: ₦15,000 (4.7%)
-
-**Recommendations:**
-• Marketing costs are rising - review campaign performance
-• Consider co-working space to reduce rent
-• Bundle software subscriptions for discounts
-
-Need help with any specific expense category?`
-    }
-
-    if (lowerMessage.includes('forecast') || lowerMessage.includes('prediction')) {
-      return `Let me create a 3-month financial forecast for you: 🔮
-
-**Projected Cash Flow (Next 3 Months):**
-
-**Month 1:**
-• Income: ₦465,000 (+3% growth)
-• Expenses: ₦335,000
-• Net: +₦130,000
-
-**Month 2:**
-• Income: ₦480,000 (+6% growth)
-• Expenses: ₦345,000
-• Net: +₦135,000
-
-**Month 3:**
-• Income: ₦495,000 (+10% growth)
-• Expenses: ₦350,000
-• Net: +₦145,000
-
-**Key Assumptions:**
-• Steady customer growth
-• Seasonal marketing increase
-• No major expense changes
-
-Would you like me to adjust any assumptions or explore different scenarios?`
-    }
-
-    // Default responses
-    const defaultResponses = [
-      `That's an interesting question! Based on your business data, I can provide some insights. Let me analyze your current financial position and get back to you with specific recommendations.
-
-Could you provide more details about what specific aspect you'd like me to focus on?`,
-
-      `I'd be happy to help you with that! 🎯
-
-From what I can see in your financial data, there are several factors to consider. Let me break this down for you:
-
-**Quick Analysis:**
-• Your business is performing well overall
-• There are opportunities for optimization
-• Cash flow trends are positive
-
-What specific metrics or time period would you like me to focus on?`,
-
-      `Great question! Let me provide you with some personalized insights based on your business profile.
-
-**Your Business Overview:**
-• Type: ${localStorage.getItem('businessData') ? JSON.parse(localStorage.getItem('businessData')!).businessType || 'General Business' : 'General Business'}
-• Monthly Revenue: ₦450,000
-• Growth Trend: Positive
-
-Is there a particular area of your finances you'd like to dive deeper into?`
-    ]
-
-    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)]
-  }
+  };
 
   const handleSendMessage = async (): Promise<void> => {
     if (!inputMessage.trim() || isTyping) return
@@ -300,7 +199,7 @@ Is there a particular area of your finances you'd like to dive deeper into?`
     } catch (error) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: "I'm sorry, I'm having trouble connecting right now. Please try again in a moment.",
+        content: "I'm sorry, I'm having trouble connecting to my AI brain right now. Please try again in a moment, or check your internet connection.",
         sender: 'ai',
         timestamp: new Date()
       }
@@ -308,6 +207,9 @@ Is there a particular area of your finances you'd like to dive deeper into?`
       const finalMessages = [...updatedMessages, errorMessage]
       setMessages(finalMessages)
       setIsConnected(false)
+      
+      // Try to reconnect after a delay
+      setTimeout(() => setIsConnected(true), 5000)
     } finally {
       setIsTyping(false)
     }
@@ -327,7 +229,7 @@ Is there a particular area of your finances you'd like to dive deeper into?`
 
   const clearChat = (): void => {
     setMessages([])
-    localStorage.removeItem('chatHistory')
+    localStorage.removeItem(getChatHistoryKey())
     loadChatHistory()
   }
 
@@ -338,6 +240,8 @@ Is there a particular area of your finances you'd like to dive deeper into?`
 
   const formatMessage = (content: string) => {
     // Simple markdown-like formatting
+    if (!content) return <div></div>;
+    
     const formatted = content
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
@@ -348,52 +252,45 @@ Is there a particular area of your finances you'd like to dive deeper into?`
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-brand-gray-light flex items-center justify-center">
-        <div className="flex items-center space-x-2">
-          <FiRefreshCw className="animate-spin text-brand-teal" size={24} />
-          <span className="text-brand-gray-dark">Loading chat...</span>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center mb-4">
+            <FiRefreshCw className="animate-spin text-white w-6 h-6" />
+          </div>
+          <span className="text-gray-600 text-sm">Loading chat...</span>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-brand-gray-light flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-brand-gray flex-shrink-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
+      <header className="border-b border-gray-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-14">
+            <div className="flex items-center space-x-3">
               <Link 
                 href="/dashboard" 
-                className="flex items-center space-x-3 text-brand-gray hover:text-brand-teal transition-colors"
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
-                <FiArrowLeft size={20} />
-                <span>Back to Dashboard</span>
+                <FiArrowLeft size={18} />
+                <span className="text-sm font-medium">Dashboard</span>
               </Link>
-              <div className="h-6 w-px bg-brand-gray"></div>
-              <div className="flex items-center space-x-2">
-                <FiMessageCircle className="text-brand-teal" size={20} />
-                <h1 className="text-xl font-semibold text-brand-gray-dark">AI Financial Assistant</h1>
-              </div>
             </div>
             
-            <div className="flex items-center space-x-2">
-              <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm ${
-                isConnected ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-              }`}>
-                <div className={`w-2 h-2 rounded-full ${
-                  isConnected ? 'bg-green-500' : 'bg-red-500'
-                }`}></div>
-                <span>{isConnected ? 'Connected' : 'Offline'}</span>
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 text-sm text-gray-500">
+                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                <span>Online</span>
               </div>
               
               <button
                 onClick={clearChat}
-                className="p-2 text-brand-gray hover:text-brand-teal transition-colors"
-                title="Clear chat history"
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-50"
+                title="Clear chat"
               >
-                <FiTrash2 size={18} />
+                <FiTrash2 size={16} />
               </button>
             </div>
           </div>
@@ -403,149 +300,149 @@ Is there a particular area of your finances you'd like to dive deeper into?`
       {/* Chat Container */}
       <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="space-y-6">
-            {messages.filter(msg => !msg.typing).map((message) => (
-              <div
-                key={message.id}
-                className={`flex items-start space-x-4 ${
-                  message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
-                }`}
-              >
-                {/* Avatar */}
-                <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
-                  message.sender === 'user' 
-                    ? 'bg-brand-teal text-white' 
-                    : 'bg-brand-gray-light text-brand-gray-dark border border-brand-gray'
-                }`}>
-                  {message.sender === 'user' ? <FiUser size={20} /> : <FiCpu size={20} />}
-                </div>
-
-                {/* Message Bubble */}
-                <div className={`flex-1 max-w-3xl ${
-                  message.sender === 'user' ? 'text-right' : ''
-                }`}>
-                  <div className={`inline-block p-4 rounded-lg ${
-                    message.sender === 'user'
-                      ? 'bg-brand-teal text-white'
-                      : 'bg-white border border-brand-gray text-brand-gray-dark'
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6">
+          {messages.filter(msg => !msg.typing).length === 0 ? (
+            /* Welcome Screen */
+            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                <FiZap className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-2xl font-semibold text-gray-900 mb-3">
+                AI Financial Assistant
+              </h1>
+              <p className="text-gray-600 mb-8 max-w-md">
+                Get personalized insights about your cash flow, expenses, and growth opportunities powered by AI that analyzes your actual financial data.
+              </p>
+              
+              {/* Suggested Questions */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl">
+                {suggestedQuestions.slice(0, 4).map((item, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSuggestedQuestion(item.question)}
+                    className="flex items-center p-4 text-left bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors group border border-gray-100"
+                  >
+                    <div className="text-gray-400 group-hover:text-gray-600 mr-3">
+                      {item.icon}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 text-sm">{item.question}</p>
+                      <p className="text-xs text-gray-500 mt-1">{item.category}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            /* Messages */
+            <div className="py-8 space-y-6">
+              {messages.filter(msg => !msg.typing).map((message) => (
+                <div key={message.id} className="group">
+                  <div className={`flex items-start space-x-4 ${
+                    message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
                   }`}>
-                    <div className="text-sm md:text-base">
-                      {formatMessage(message.content)}
+                    {/* Avatar */}
+                    <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                      message.sender === 'user' 
+                        ? 'bg-blue-600 text-white' 
+                        : 'bg-gradient-to-br from-purple-500 to-blue-600 text-white'
+                    }`}>
+                      {message.sender === 'user' ? 'You' : 'AI'}
                     </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2 mt-2">
-                    <span className="text-xs text-brand-gray">
-                      {message.timestamp.toLocaleTimeString([], { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
-                      })}
-                    </span>
-                    
-                    {message.sender === 'ai' && (
-                      <div className="flex items-center space-x-1">
-                        <button
-                          onClick={() => copyMessage(message.content)}
-                          className="text-brand-gray hover:text-brand-teal transition-colors"
-                          title="Copy message"
-                        >
-                          <FiCopy size={14} />
-                        </button>
-                        <button className="text-brand-gray hover:text-green-600 transition-colors">
-                          <FiThumbsUp size={14} />
-                        </button>
-                        <button className="text-brand-gray hover:text-red-600 transition-colors">
-                          <FiThumbsDown size={14} />
-                        </button>
+
+                    {/* Message */}
+                    <div className={`flex-1 ${message.sender === 'user' ? 'text-right' : ''}`}>
+                      <div className={`inline-block max-w-3xl ${
+                        message.sender === 'user'
+                          ? 'bg-blue-600 text-white rounded-2xl rounded-tr-md px-4 py-3'
+                          : 'text-gray-900'
+                      }`}>
+                        <div className="text-sm leading-relaxed">
+                          {formatMessage(message.content)}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            {/* Typing Indicator */}
-            {isTyping && (
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-brand-gray-light text-brand-gray-dark border border-brand-gray flex items-center justify-center">
-                  <FiCpu size={20} />
-                </div>
-                <div className="bg-white border border-brand-gray rounded-lg p-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-brand-gray rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-brand-gray rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-brand-gray rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      
+                      <div className={`flex items-center mt-2 space-x-2 ${
+                        message.sender === 'user' ? 'justify-end' : ''
+                      }`}>
+                        <span className="text-xs text-gray-400">
+                          {message.timestamp.toLocaleTimeString([], { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                          })}
+                        </span>
+                        
+                        {message.sender === 'ai' && (
+                          <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={() => copyMessage(message.content)}
+                              className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+                              title="Copy"
+                            >
+                              <FiCopy size={12} />
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <span className="text-sm text-brand-gray">AI is thinking...</span>
                   </div>
                 </div>
-              </div>
-            )}
+              ))}
 
-            <div ref={messagesEndRef} />
-          </div>
+              {/* Typing Indicator */}
+              {isTyping && (
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 text-white flex items-center justify-center text-sm font-medium">
+                    AI
+                  </div>
+                  <div className="flex items-center space-x-2 text-gray-500">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
+                    <span className="text-sm">Thinking...</span>
+                  </div>
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
+            </div>
+          )}
         </div>
 
-        {/* Suggested Questions */}
-        {messages.filter(msg => !msg.typing).length <= 1 && (
-          <div className="px-4 sm:px-6 lg:px-8 py-4 bg-white border-t border-brand-gray">
-            <h3 className="text-sm font-medium text-brand-gray-dark mb-3">
-              Try asking me about:
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-              {suggestedQuestions.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSuggestedQuestion(item.question)}
-                  className="flex items-center space-x-3 p-3 text-left text-sm bg-brand-gray-light hover:bg-brand-teal/10 hover:text-brand-teal rounded-lg transition-colors group"
-                >
-                  <div className="text-brand-teal group-hover:text-brand-teal">
-                    {item.icon}
-                  </div>
-                  <div>
-                    <p className="font-medium">{item.question}</p>
-                    <p className="text-xs text-brand-gray group-hover:text-brand-teal/70">
-                      {item.category}
-                    </p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Input Area */}
-        <div className="flex-shrink-0 bg-white border-t border-brand-gray px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-end space-x-4">
-            <div className="flex-1">
-              <input
-                ref={inputRef}
-                type="text"
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ask me anything about your finances..."
-                className="w-full px-4 py-3 border border-brand-gray rounded-lg focus:ring-2 focus:ring-brand-teal focus:border-brand-teal resize-none"
-                disabled={isTyping}
-              />
+        <div className="border-t border-gray-100 bg-white px-4 sm:px-6 py-4">
+          <div className="relative max-w-3xl mx-auto">
+            <div className="flex items-end space-x-3">
+              <div className="flex-1 relative">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Ask me anything about your finances..."
+                  className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm placeholder-gray-500 bg-gray-50 focus:bg-white transition-colors"
+                  disabled={isTyping}
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!inputMessage.trim() || isTyping}
+                  className={`absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-xl transition-all ${
+                    inputMessage.trim() && !isTyping
+                      ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  <FiSend size={16} />
+                </button>
+              </div>
             </div>
-            <button
-              onClick={handleSendMessage}
-              disabled={!inputMessage.trim() || isTyping}
-              className={`p-3 rounded-lg transition-all ${
-                inputMessage.trim() && !isTyping
-                  ? 'bg-brand-teal text-white hover:bg-brand-teal/90'
-                  : 'bg-brand-gray text-brand-gray-dark cursor-not-allowed'
-              }`}
-            >
-              <FiSend size={20} />
-            </button>
+            <p className="text-xs text-gray-400 mt-3 text-center">
+              Press Enter to send • Powered by AI analyzing your financial data
+            </p>
           </div>
-          <p className="text-xs text-brand-gray mt-2 text-center">
-            Press Enter to send • AI responses are simulated for demonstration
-          </p>
         </div>
       </div>
     </div>

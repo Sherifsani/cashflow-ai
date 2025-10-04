@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { FiArrowLeft, FiTrendingUp, FiTrendingDown, FiDollarSign, FiCalendar } from 'react-icons/fi';
+import { FiArrowLeft, FiTrendingUp, FiTrendingDown, FiDollarSign, FiCalendar, FiRefreshCw, FiZap, FiAlertTriangle, FiTarget, FiCheckCircle, FiBarChart } from 'react-icons/fi';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { getAnalytics } from '../../../lib/api';
+import { getAnalytics, getAIInsights } from '../../../lib/api';
 
 type Period = '7d' | '30d' | '90d' | '1y';
 
@@ -45,7 +45,9 @@ export default function InsightsPage() {
   const router = useRouter();
   const [selectedPeriod, setSelectedPeriod] = useState<Period>('30d');
   const [data, setData] = useState<AnalyticsData | null>(null);
+  const [aiInsights, setAiInsights] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const periods = [
@@ -54,6 +56,18 @@ export default function InsightsPage() {
     { value: '90d' as Period, label: '90 Days' },
     { value: '1y' as Period, label: '1 Year' }
   ];
+
+  const fetchAIInsights = async () => {
+    try {
+      setAiLoading(true);
+      const response = await getAIInsights();
+      setAiInsights(response.data.insights);
+    } catch (err: any) {
+      console.error('Failed to fetch AI insights:', err);
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const fetchData = async (period: Period) => {
     try {
@@ -71,6 +85,7 @@ export default function InsightsPage() {
 
   useEffect(() => {
     fetchData(selectedPeriod);
+    fetchAIInsights();
   }, [selectedPeriod]);
 
   const formatCurrency = (amount: number): string => {
@@ -286,6 +301,125 @@ export default function InsightsPage() {
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* AI Insights Section */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-brand-text-dark flex items-center">
+                  <div className="bg-purple-100 p-2 rounded-lg mr-3">
+                    <FiZap className="h-5 w-5 text-purple-600" />
+                  </div>
+                  AI-Powered Insights
+                </h3>
+                <button 
+                  onClick={fetchAIInsights}
+                  disabled={aiLoading}
+                  className="text-brand-teal hover:text-brand-teal-dark text-sm font-medium disabled:opacity-50 flex items-center"
+                >
+                  <FiRefreshCw className={`h-4 w-4 mr-1 ${aiLoading ? 'animate-spin' : ''}`} />
+                  Refresh
+                </button>
+              </div>
+
+              {aiLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <FiRefreshCw className="animate-spin h-8 w-8 text-brand-teal mr-3" />
+                  <span className="text-brand-text-medium">AI is analyzing your financial data...</span>
+                </div>
+              ) : aiInsights ? (
+                <div className="space-y-6">
+                  {/* Recommendations */}
+                  {aiInsights.recommendations && (
+                    <div>
+                      <h4 className="font-semibold text-brand-text-dark mb-4">Recommendations</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {aiInsights.recommendations.map((rec: any, index: number) => (
+                          <div key={index} className={`border rounded-lg p-4 ${
+                            rec.priority === 'high' ? 'bg-red-50 border-red-200' :
+                            rec.priority === 'medium' ? 'bg-yellow-50 border-yellow-200' :
+                            'bg-green-50 border-green-200'
+                          }`}>
+                            <div className="flex items-start">
+                              <div className={`p-2 rounded-lg mr-3 ${
+                                rec.priority === 'high' ? 'bg-red-100' :
+                                rec.priority === 'medium' ? 'bg-yellow-100' :
+                                'bg-green-100'
+                              }`}>
+                                {rec.priority === 'high' ? (
+                                  <FiAlertTriangle className="h-4 w-4 text-red-600" />
+                                ) : rec.priority === 'medium' ? (
+                                  <FiTarget className="h-4 w-4 text-yellow-600" />
+                                ) : (
+                                  <FiCheckCircle className="h-4 w-4 text-green-600" />
+                                )}
+                              </div>
+                              <div className="flex-1">
+                                <h5 className={`font-medium ${
+                                  rec.priority === 'high' ? 'text-red-800' :
+                                  rec.priority === 'medium' ? 'text-yellow-800' :
+                                  'text-green-800'
+                                }`}>{rec.title}</h5>
+                                <p className={`text-sm mt-1 ${
+                                  rec.priority === 'high' ? 'text-red-700' :
+                                  rec.priority === 'medium' ? 'text-yellow-700' :
+                                  'text-green-700'
+                                }`}>{rec.description}</p>
+                                <span className={`inline-block mt-2 px-2 py-1 text-xs rounded-full ${
+                                  rec.priority === 'high' ? 'bg-red-200 text-red-800' :
+                                  rec.priority === 'medium' ? 'bg-yellow-200 text-yellow-800' :
+                                  'bg-green-200 text-green-800'
+                                }`}>
+                                  {rec.priority} priority
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Cash Flow Tip */}
+                  {aiInsights.cashFlowTip && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-blue-800 mb-2 flex items-center">
+                        <FiTrendingUp className="h-4 w-4 mr-2" />
+                        Cash Flow Tip
+                      </h4>
+                      <h5 className="font-medium text-blue-800">{aiInsights.cashFlowTip.title}</h5>
+                      <p className="text-blue-700 text-sm mt-1">{aiInsights.cashFlowTip.description}</p>
+                      {aiInsights.cashFlowTip.potentialSavings && (
+                        <p className="text-blue-600 text-sm font-medium mt-2">
+                          💰 Potential Impact: {aiInsights.cashFlowTip.potentialSavings}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Growth Suggestion */}
+                  {aiInsights.growthSuggestion && (
+                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-purple-800 mb-2 flex items-center">
+                        <FiBarChart className="h-4 w-4 mr-2" />
+                        Growth Opportunity
+                      </h4>
+                      <h5 className="font-medium text-purple-800">{aiInsights.growthSuggestion.title}</h5>
+                      <p className="text-purple-700 text-sm mt-1">{aiInsights.growthSuggestion.description}</p>
+                      {aiInsights.growthSuggestion.timeframe && (
+                        <p className="text-purple-600 text-sm font-medium mt-2">
+                          ⏱️ Timeframe: {aiInsights.growthSuggestion.timeframe}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <FiZap className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                  <p className="text-brand-text-medium">No AI insights available. Click refresh to generate new insights.</p>
+                </div>
+              )}
             </div>
 
             {/* Period Summary */}

@@ -122,7 +122,17 @@ export default function useRegisterForm() {
         email: formData.email,
         firstName: formData.firstName,
         lastName: formData.lastName,
+        phone: formData.phone,
         businessName: formData.businessName,
+        businessType: formData.businessType,
+        businessLocation: formData.businessLocation,
+        monthlyRevenue: formData.monthlyRevenue,
+        employeeCount: formData.employeeCount,
+        startingBalance: formData.startingBalance,
+        expectedMonthlyExpense: formData.expectedMonthlyExpense,
+        financialGoals: formData.financialGoals,
+        alertPreference: formData.alertPreference,
+        hearAboutUs: formData.hearAboutUs,
         registeredAt: new Date().toISOString()
       }));
       

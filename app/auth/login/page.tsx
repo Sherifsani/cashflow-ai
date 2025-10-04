@@ -95,6 +95,8 @@ const Login = () => {
             if (pendingUser) {
               const userData = JSON.parse(pendingUser);
               
+              console.log('Creating user profile with data:', userData);
+              
               await createUserProfile({
                 userId: crypto.randomUUID(),
                 email: formData.email,
@@ -117,6 +119,8 @@ const Login = () => {
                 notificationPreference: userData.alertPreference === "whatsapp" ? "both" : "email"
               });
               
+              console.log('User profile created successfully');
+              
               // Clean up stored data
               localStorage.removeItem("pendingUser");
               sessionStorage.removeItem("pendingUser");
@@ -126,6 +130,10 @@ const Login = () => {
             localStorage.setItem("profileCreated", "true");
           } catch (error) {
             console.error('Profile creation error:', error);
+            // Don't block login if profile creation fails
+            // User can complete profile later
+            localStorage.removeItem("pendingProfileCreation");
+            setError('Login successful, but profile setup incomplete. You can complete it in settings.');
           }
         }
         

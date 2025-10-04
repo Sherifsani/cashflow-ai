@@ -23,18 +23,35 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useDashboard } from '../../hooks/useDashboard'
 import { useTransactions } from '../../hooks/useTransactions'
+import { getAIInsights } from '../../lib/api'
 
 export default function Dashboard() {
   const router = useRouter()
   const { dashboardData, userProfile, transactions, loading, error, refreshData } = useDashboard()
   const { removeTransaction } = useTransactions()
   const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false)
+  const [aiInsights, setAiInsights] = useState<any>(null)
+  const [aiLoading, setAiLoading] = useState<boolean>(false)
+
+  const fetchAIInsights = async () => {
+    try {
+      setAiLoading(true)
+      const response = await getAIInsights()
+      setAiInsights(response.data.insights)
+    } catch (error) {
+      console.error('Failed to fetch AI insights:', error)
+    } finally {
+      setAiLoading(false)
+    }
+  }
 
   useEffect(() => {
     // Check authentication
     const token = localStorage.getItem('idToken') || localStorage.getItem('accessToken')
     if (!token) {
       router.push('/auth/login')
+    } else {
+      fetchAIInsights()
     }
   }, [router])
 
@@ -302,42 +319,64 @@ export default function Dashboard() {
               </div>
               AI Insights
             </h3>
-            <Link href="/dashboard/insights" className="text-brand-teal hover:text-brand-teal-dark text-sm font-medium">
-              View All
-            </Link>
+            <div className="flex items-center space-x-2">
+              <button 
+                onClick={fetchAIInsights}
+                disabled={aiLoading}
+                className="text-brand-teal hover:text-brand-teal-dark text-sm font-medium disabled:opacity-50"
+              >
+                {aiLoading ? <FiRefreshCw className="animate-spin h-4 w-4" /> : 'Refresh'}
+              </button>
+              <Link href="/dashboard/insights" className="text-brand-teal hover:text-brand-teal-dark text-sm font-medium">
+                View All
+              </Link>
+            </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <div className="flex items-start">
-                <FiAlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-yellow-800">Cash Flow Alert</p>
-                  <p className="text-sm text-yellow-700 mt-1">Your expenses increased 15% this month. Consider reviewing marketing spend.</p>
-                </div>
-              </div>
+          {aiLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <FiRefreshCw className="animate-spin h-6 w-6 text-brand-teal mr-2" />
+              <span className="text-brand-text-medium">Generating AI insights...</span>
             </div>
-            
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <div className="flex items-start">
-                <FiCheckCircle className="h-5 w-5 text-green-600 mt-0.5 mr-3 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-green-800">Good News</p>
-                  <p className="text-sm text-green-700 mt-1">Payment collection improved by 12% compared to last month.</p>
+          ) : aiInsights?.recommendations ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {aiInsights.recommendations.slice(0, 3).map((rec: any, index: number) => (
+                <div key={index} className={`border rounded-lg p-4 ${
+                  rec.priority === 'high' ? 'bg-red-50 border-red-200' :
+                  rec.priority === 'medium' ? 'bg-yellow-50 border-yellow-200' :
+                  'bg-blue-50 border-blue-200'
+                }`}>
+                  <div className="flex items-start">
+                    {rec.priority === 'high' ? (
+                      <FiAlertTriangle className={`h-5 w-5 mt-0.5 mr-3 flex-shrink-0 ${
+                        rec.priority === 'high' ? 'text-red-600' : 'text-yellow-600'
+                      }`} />
+                    ) : rec.priority === 'medium' ? (
+                      <FiTarget className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
+                    ) : (
+                      <FiCheckCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+                    )}
+                    <div>
+                      <p className={`text-sm font-medium ${
+                        rec.priority === 'high' ? 'text-red-800' :
+                        rec.priority === 'medium' ? 'text-yellow-800' :
+                        'text-blue-800'
+                      }`}>{rec.title}</p>
+                      <p className={`text-sm mt-1 ${
+                        rec.priority === 'high' ? 'text-red-700' :
+                        rec.priority === 'medium' ? 'text-yellow-700' :
+                        'text-blue-700'
+                      }`}>{rec.description}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-            
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-start">
-                <FiTarget className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-blue-800">Recommendation</p>
-                  <p className="text-sm text-blue-700 mt-1">Set aside ₦80,000 for Q1 taxes based on your cash flow pattern.</p>
-                </div>
-              </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-brand-text-medium">No AI insights available. Try refreshing or check back later.</p>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Recent Transactions */}

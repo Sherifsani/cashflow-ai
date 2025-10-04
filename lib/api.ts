@@ -66,6 +66,16 @@ export const getTransactionsByPeriod = (period: '7d' | '30d' | '90d' | '1y') =>
 export const getAnalytics = (period: '7d' | '30d' | '90d' | '1y') =>
   apiRequest(`/api/analytics/${period}`);
 
+// AI Insights
+export const getAIInsights = () => apiRequest('/api/insights');
+
+// Chat
+export const sendChatMessage = (message: string) =>
+  apiRequest('/api/chat/message', {
+    method: 'POST',
+    body: JSON.stringify({ message }),
+  });
+
 export const deleteTransaction = (transactionId: string) =>
   apiRequest(`/api/transactions/${transactionId}`, { method: 'DELETE' });
 
