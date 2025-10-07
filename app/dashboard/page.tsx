@@ -138,10 +138,10 @@ export default function Dashboard() {
                 
                 {showMobileMenu && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                    <Link href="/dashboard/settings" className="flex items-center px-4 py-2 text-brand-text-medium hover:bg-gray-50">
+                    {/* <Link href="/dashboard/settings" className="flex items-center px-4 py-2 text-brand-text-medium hover:bg-gray-50">
                       <FiSettings className="h-4 w-4 mr-2" />
                       Settings
-                    </Link>
+                    </Link> */}
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center px-4 py-2 text-red-600 hover:bg-gray-50"
