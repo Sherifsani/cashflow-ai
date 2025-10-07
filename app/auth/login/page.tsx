@@ -133,7 +133,6 @@ const Login = () => {
             // Don't block login if profile creation fails
             // User can complete profile later
             localStorage.removeItem("pendingProfileCreation");
-            setError('Login successful, but profile setup incomplete. You can complete it in settings.');
           }
         }
         
