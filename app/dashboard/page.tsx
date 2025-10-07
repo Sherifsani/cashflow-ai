@@ -10,7 +10,7 @@ import {
   FiCheckCircle,
   FiZap,
   FiTarget,
-  FiUpload,
+  FiList,
   FiMessageCircle,
   FiSettings,
   FiUser,
@@ -285,14 +285,14 @@ export default function Dashboard() {
             </div>
           </Link>
 
-          <Link href="/dashboard/upload" className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+          <Link href="/dashboard/transactions" className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center">
               <div className="bg-blue-500 p-3 rounded-lg mr-4">
-                <FiUpload className="h-6 w-6 text-white" />
+                <FiList className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-brand-text-dark">Upload Documents</h3>
-                <p className="text-brand-text-medium text-sm">Bank statements, invoices</p>
+                <h3 className="font-semibold text-brand-text-dark">View All Transactions</h3>
+                <p className="text-brand-text-medium text-sm">Complete transaction history</p>
               </div>
             </div>
           </Link>
