@@ -11,6 +11,10 @@ const getAuthToken = () => {
 // API request wrapper with auth
 const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
   const token = getAuthToken();
+  const url = `${BASE_URL}${endpoint}`;
+  
+  console.log('Making API request to:', url);
+  console.log('With token:', token ? 'Present' : 'Missing');
   
   const config: RequestInit = {
     ...options,
@@ -21,14 +25,23 @@ const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
     },
   };
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, config);
-  
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Request failed' }));
-    throw new Error(error.error || `HTTP ${response.status}`);
-  }
+  try {
+    const response = await fetch(url, config);
+    console.log('API response status:', response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API error response:', errorText);
+      throw new Error(`Failed ${endpoint}: ${response.status}`);
+    }
 
-  return response.json();
+    const data = await response.json();
+    console.log('API response data:', data);
+    return data;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error;
+  }
 };
 
 // Health & Status
