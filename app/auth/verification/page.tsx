@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FiMail, FiArrowLeft, FiRefreshCw, FiCheck } from 'react-icons/fi';
 
-export default function VerificationPage() {
+function VerificationForm() {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
@@ -199,5 +199,13 @@ export default function VerificationPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerificationPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerificationForm />
+    </Suspense>
   );
 }
